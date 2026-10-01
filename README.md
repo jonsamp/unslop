@@ -33,9 +33,10 @@ directories outside Git.
 - **Import cycles.** Groups of modules connected by circular dependencies.
 - **Safeguards.** How hooks and quality checks are configured and connected, reported separately from the score.
 
-The headline is a **0–100 sloppiness index. Lower is better.** Each
-contribution traces back to raw measurements. Findings include file locations
-so you can inspect the code behind them.
+The report prints the evidence first and the **0–100 sloppiness index. Lower
+is better.** as its last line. Each contribution traces back to raw
+measurements. Findings include file locations so you can inspect the code
+behind them.
 
 The index measures production code. Test code is analyzed separately, and
 safeguard configuration never offsets structural debt.
@@ -48,7 +49,14 @@ compatibility and supported-platform limits.
 
 Requires [Bun](https://bun.sh) 1.1 or later.
 
-Install from source:
+Add it to a project:
+
+```bash
+bun add -d github:jonsamp/unslop
+```
+
+Bun pins the commit in `bun.lock`, which is what keeps scores comparable over
+time. Or install it globally to work on unslop itself:
 
 ```bash
 git clone https://github.com/jonsamp/unslop
@@ -97,15 +105,15 @@ unslop audit . --json --out /tmp/after.json
 unslop compare /tmp/before.json /tmp/after.json
 ```
 
-Named hotspots keep their identity across comment and line shifts; replacing
-a function or adding the same method name in another class creates a new
-hotspot. Anonymous or duplicate identities remain conservative new/resolved
-pairs. Analyzers 0.2.3 and later emit schema 1.2.0 and use bounded suffix-array
-duplication analysis. Historical reports remain readable; crossing either the identity or
-native-engine transition requires a fresh baseline. Scoring and the 100-token /
-3-line clone thresholds are unchanged. See the
-[identity and compatibility rules](docs/hotspot-identity.md) and
-[native engine acceptance](docs/research/native-duplication/acceptance.md).
+Named hotspots keep their identity across comment and line shifts, so a
+comparison survives ordinary edits. Replacing a function, or adding the same
+method name in another class, creates a new hotspot. Anonymous and duplicate
+identities stay conservative new/resolved pairs rather than guessing. Clone
+group ids are deterministic for a given tree but shift when the code changes,
+so a comparison can report clone groups as new while the group count is
+unchanged. Treat a new clone group as a lead and check whether the count
+actually moved. See the
+[identity and compatibility rules](docs/hotspot-identity.md).
 
 ## Guide an agent through cleanup
 
@@ -189,6 +197,11 @@ policy logic.
 unslop currently analyzes TypeScript and TSX. Other languages and excluded
 files are reported as coverage boundaries.
 
+Build output is skipped by directory name — `dist`, `build`, `out` and
+`coverage` — but only at the repository root. A source directory deeper in the
+tree keeps its real name: `src/screens/build/` is audited, not mistaken for
+compiler output.
+
 Audits never execute the project's tests, builds, linters, or hooks.
 Safeguard findings describe configuration and wiring; they do not establish
 that those checks pass.
@@ -214,24 +227,6 @@ compatible analyzer, scoring, and configuration identities.
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 
-## A fork of trellis
-
-unslop is a fork of [jayminwest/trellis](https://github.com/jayminwest/trellis),
-maintained separately. Changes here are not sent upstream.
-
-It differs from upstream in two ways:
-
-- Build-output directory names (`dist`, `build`, `out`, `coverage`) are matched
-  at the repository root only. Upstream matched them at any depth, so a real
-  source directory such as `src/screens/build/` was silently dropped from the
-  audit while the report still read `completeness: complete`.
-- The command, package, and report headers are named `unslop`. Analysis ids
-  (`trellis.complexity`, `trellis.duplication`, …) keep the upstream name: they
-  ride the analysis identity and appear in saved report artifacts, so renaming
-  them would invalidate comparisons against existing baselines.
-
-Configuration is read from `unslop.yaml`, falling back to `trellis.yaml`.
-
 ## Status
 
 Pre-1.0. The deterministic audit, baseline comparison, declarative policies,
@@ -239,6 +234,12 @@ optional history, and fleet workflows are implemented. unslop audits its
 own codebase.
 
 The scoring formula remains provisional while calibration continues.
+
+## Credits
+
+unslop began as a fork of [trellis](https://github.com/jayminwest/trellis) by
+Jaymin West, and keeps its MIT license. It is maintained separately now, and
+changes here are not sent upstream.
 
 ## License
 
