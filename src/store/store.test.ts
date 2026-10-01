@@ -5,26 +5,26 @@ import { migrate } from "./migrate.ts";
 import { resolveDbPath } from "./store.ts";
 
 describe("resolveDbPath", () => {
-	const saved = process.env.TRELLIS_DB;
+	const saved = process.env.UNSLOP_DB;
 	afterEach(() => {
-		if (saved === undefined) delete process.env.TRELLIS_DB;
-		else process.env.TRELLIS_DB = saved;
+		if (saved === undefined) delete process.env.UNSLOP_DB;
+		else process.env.UNSLOP_DB = saved;
 	});
 
 	test("an explicit argument wins over env and default", () => {
-		process.env.TRELLIS_DB = "/from/env.db";
+		process.env.UNSLOP_DB = "/from/env.db";
 		expect(resolveDbPath("/explicit.db")).toBe("/explicit.db");
 	});
 
-	test("falls back to TRELLIS_DB when no argument is given", () => {
-		process.env.TRELLIS_DB = "/from/env.db";
+	test("falls back to UNSLOP_DB when no argument is given", () => {
+		process.env.UNSLOP_DB = "/from/env.db";
 		expect(resolveDbPath()).toBe("/from/env.db");
 	});
 
 	test("defaults to a central ~/.trellis path, never inside a repo", () => {
-		delete process.env.TRELLIS_DB;
+		delete process.env.UNSLOP_DB;
 		const path = resolveDbPath();
-		expect(path).toContain(join(".trellis", "trellis.db"));
+		expect(path).toContain(join(".unslop", "unslop.db"));
 	});
 });
 

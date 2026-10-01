@@ -79,7 +79,7 @@ console.log(JSON.stringify({ direct, fleet }));
 				const child = Bun.spawn([process.execPath, "--preload", guard, ...args], {
 					cwd: root,
 					// No inherited API keys, model settings, Git configuration or executable tools.
-					env: { PATH: "", TRELLIS_DB: join(work, "unexpected.db"), TRELLIS_LOG_LEVEL: "silent" },
+					env: { PATH: "", UNSLOP_DB: join(work, "unexpected.db"), TRELLIS_LOG_LEVEL: "silent" },
 					stdout: "pipe",
 					stderr: "pipe",
 				});

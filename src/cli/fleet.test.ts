@@ -37,7 +37,7 @@ describe("trellis fleet", () => {
 		await seedFixtureRepo(repoDir, "clean");
 
 		workDir = mkdtempSync(join(tmpdir(), "trellis-fleet-work-"));
-		dbPath = join(workDir, "trellis.db");
+		dbPath = join(workDir, "unslop.db");
 		targetsFile = join(workDir, "targets.yaml");
 		writeFileSync(
 			targetsFile,
@@ -55,7 +55,7 @@ describe("trellis fleet", () => {
 	// accommodates slow CI containers where the 5s default is marginal.
 	test("audits every target and isolates a missing path (exit 2, report still emitted)", async () => {
 		const { code, stdout, stderr } = await runCli(["fleet", "--targets", targetsFile], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(code).toBe(2);
 		expect(stdout).toContain("unslop fleet");
@@ -68,7 +68,7 @@ describe("trellis fleet", () => {
 
 	test("a fleet of healthy targets is clean (exit 0)", async () => {
 		writeFileSync(targetsFile, `targets:\n  - id: fixture\n    path: ${repoDir}\n`);
-		const { code, stdout } = await runCli(["fleet", "--targets", targetsFile], { TRELLIS_DB: "" });
+		const { code, stdout } = await runCli(["fleet", "--targets", targetsFile], { UNSLOP_DB: "" });
 		expect(code).toBe(0);
 		expect(stdout).toContain("1 ok · 0 error · 0 policy failed");
 	}, 20_000);
@@ -80,7 +80,7 @@ describe("trellis fleet", () => {
 		writeFileSync(join(sloppyDir, "trellis.yaml"), "policy:\n  maxIndex: 0\n");
 		writeFileSync(targetsFile, `targets:\n  - id: fixture\n    path: ${sloppyDir}\n`);
 		const { code, stdout, stderr } = await runCli(["fleet", "--targets", targetsFile], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		rmSync(sloppyDir, { recursive: true, force: true });
 		expect(code).toBe(2);
@@ -92,7 +92,7 @@ describe("trellis fleet", () => {
 
 	test("--json emits the aggregate report with per-target entries", async () => {
 		const { code, stdout } = await runCli(["fleet", "--targets", targetsFile, "--json"], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(code).toBe(2); // the missing target still trips the exit rollup
 		const report = JSON.parse(stdout);
@@ -108,7 +108,7 @@ describe("trellis fleet", () => {
 	test("--history persists one audit run per scored target", async () => {
 		const { code } = await runCli(
 			["fleet", "--targets", targetsFile, "--history", "--db", dbPath],
-			{ TRELLIS_DB: "" },
+			{ UNSLOP_DB: "" },
 		);
 		expect(code).toBe(2);
 		const { openStore } = await import("../store/index.ts");
@@ -122,14 +122,14 @@ describe("trellis fleet", () => {
 	}, 20_000);
 
 	test("is stateless by default — no database is created", async () => {
-		await runCli(["fleet", "--targets", targetsFile], { TRELLIS_DB: dbPath });
+		await runCli(["fleet", "--targets", targetsFile], { UNSLOP_DB: dbPath });
 		const { existsSync } = await import("node:fs");
 		expect(existsSync(dbPath)).toBe(false);
 	}, 20_000);
 
 	test("errors clearly on a malformed targets.yaml", async () => {
 		writeFileSync(targetsFile, "targets:\n  - id: a\n"); // missing required `path`
-		const { code, stderr } = await runCli(["fleet", "--targets", targetsFile], { TRELLIS_DB: "" });
+		const { code, stderr } = await runCli(["fleet", "--targets", targetsFile], { UNSLOP_DB: "" });
 		expect(code).toBe(1);
 		expect(stderr).toContain("targets.yaml");
 	}, 20_000);

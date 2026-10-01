@@ -44,7 +44,7 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 		dir = mkdtempSync(join(tmpdir(), "trellis-cli-exit-"));
 		await seedFixtureRepo(dir, "sloppy");
 		dbDir = mkdtempSync(join(tmpdir(), "trellis-cli-exit-db-"));
-		dbPath = join(dbDir, "trellis.db");
+		dbPath = join(dbDir, "unslop.db");
 	});
 
 	afterEach(() => {
@@ -56,7 +56,7 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 	// accommodates slow CI containers where the 5s default is marginal.
 	test("audit with no configured policy is clean (exit 0)", async () => {
 		const { code, stdout } = await runCli(["audit", dir, "--json", "--quiet"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(0);
 		expect(JSON.parse(stdout).score.index).toBeGreaterThan(0);
@@ -65,7 +65,7 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 	test("a tripped declarative policy exits 2 and still emits the report", async () => {
 		writeFileSync(join(dir, "trellis.yaml"), "policy:\n  maxIndex: 0\n");
 		const { code, stdout, stderr } = await runCli(["audit", dir, "--json", "--quiet"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(2);
 		expect(JSON.parse(stdout).score.index).toBeGreaterThan(0);
@@ -74,13 +74,13 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 
 	test("a passing declarative policy stays clean (exit 0)", async () => {
 		writeFileSync(join(dir, "trellis.yaml"), "policy:\n  maxIndex: 100\n");
-		const { code } = await runCli(["audit", dir, "--quiet"], { TRELLIS_DB: dbPath });
+		const { code } = await runCli(["audit", dir, "--quiet"], { UNSLOP_DB: dbPath });
 		expect(code).toBe(0);
 	}, 20_000);
 
 	test("an unreadable workspace is an operational error (exit 1), distinct from a policy trip", async () => {
 		const { code, stdout, stderr } = await runCli(["audit", join(dbDir, "absent"), "--quiet"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(1);
 		expect(stdout).toBe("");
@@ -90,14 +90,14 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 	test("policy failure and operational failure are always distinguishable (2 vs 1)", async () => {
 		// Policy trip: report on stdout, reasons on stderr, exit 2.
 		writeFileSync(join(dir, "trellis.yaml"), "policy:\n  maxIndex: 0\n");
-		const tripped = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+		const tripped = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 		expect(tripped.code).toBe(2);
 		expect(tripped.stdout.length).toBeGreaterThan(0);
 		// Operational: nothing on stdout, exit 1.
 		const broken = await runCli(
 			["audit", dir, "--json", "--quiet", "--config", join(dbDir, "gone.yaml")],
 			{
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			},
 		);
 		expect(broken.code).toBe(1);
@@ -122,7 +122,7 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 			`targets:\n  - id: fixture\n    path: ${dir}\n` +
 				`  - id: gone\n    path: ${join(dbDir, "missing")}\n`,
 		);
-		const fail = await runCli(["fleet", "--targets", targets], { TRELLIS_DB: "" });
+		const fail = await runCli(["fleet", "--targets", targets], { UNSLOP_DB: "" });
 		expect(fail.code).toBe(2);
 		expect(fail.stdout).toContain("unslop fleet");
 		expect(fail.stderr).toContain("gone");
@@ -132,13 +132,13 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 		writeFileSync(join(dir, "trellis.yaml"), "policy:\n  maxIndex: 0\n");
 		const targets = join(dbDir, "targets.yaml");
 		writeFileSync(targets, `targets:\n  - id: fixture\n    path: ${dir}\n`);
-		const tripped = await runCli(["fleet", "--targets", targets], { TRELLIS_DB: "" });
+		const tripped = await runCli(["fleet", "--targets", targets], { UNSLOP_DB: "" });
 		expect(tripped.code).toBe(2);
 		expect(tripped.stdout).toContain("unslop fleet");
 		expect(tripped.stderr).toContain("fixture: policy failed");
 		// Operational: the fleet declaration itself is broken — nothing on stdout, exit 1.
 		const broken = await runCli(["fleet", "--targets", join(dbDir, "absent.yaml")], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(broken.code).toBe(1);
 		expect(broken.stdout).toBe("");

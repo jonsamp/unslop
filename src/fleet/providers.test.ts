@@ -60,7 +60,7 @@ describe("runFleetTargets (per-target provider scope, real core)", () => {
 	beforeEach(async () => {
 		dir = await mkdtemp(join(tmpdir(), "trellis-fleet-providers-"));
 		targetsFile = join(dir, "targets.yaml");
-		dbPath = join(dir, "trellis.db");
+		dbPath = join(dir, "unslop.db");
 	});
 
 	afterEach(async () => {

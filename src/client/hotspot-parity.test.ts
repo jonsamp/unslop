@@ -45,7 +45,7 @@ async function cli(args: string[]) {
 	const child = Bun.spawn([process.execPath, MAIN, ...args], {
 		stdout: "pipe",
 		stderr: "pipe",
-		env: { ...process.env, PATH: "", TRELLIS_DB: db, TRELLIS_LOG_LEVEL: "silent" },
+		env: { ...process.env, PATH: "", UNSLOP_DB: db, TRELLIS_LOG_LEVEL: "silent" },
 	});
 	const [stdout, stderr, code] = await Promise.all([
 		new Response(child.stdout).text(),

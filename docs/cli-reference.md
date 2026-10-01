@@ -31,7 +31,7 @@ trellis guide cleanup              # print bundled, read-only cleanup guidance
 
 The default `audit` run is **stateless** — no database, no report files —
 unless `--history` / `--out` ask. History lives centrally at
-`~/.trellis/trellis.db` (`$TRELLIS_DB` or `--db` overrides), never inside the
+`~/.unslop/unslop.db` (`$UNSLOP_DB` or `--db` overrides), never inside the
 audited repo.
 
 ### Optional evidence providers (`--provider`, SPEC §16.4)
@@ -113,7 +113,7 @@ Audits are stateless by default. Opt in to a central history and to
 multi-repo runs:
 
 ```bash
-trellis audit . --history                 # append this run to ~/.trellis/trellis.db
+trellis audit . --history                 # append this run to ~/.unslop/unslop.db
 trellis report                            # dashboard: latest index + compatible-run deltas
 trellis report --repo trellis --since 2026-01-01
 

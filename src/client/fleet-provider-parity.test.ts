@@ -180,11 +180,11 @@ describe("client SDK fleet provider-capable parity (SPEC §16.4, §13.1, §11)",
 		// The CLI agrees on both surfaces: the fleet aggregate and the
 		// standalone audit fold the identical per-target report.
 		const cliFleet = await runCli(["fleet", "--targets", targetsFile, "--json"], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(cliFleet.code).toBe(0);
 		expect(comparableFleet(JSON.parse(cliFleet.stdout))).toEqual(comparableFleet(fleet));
-		const cliAudit = await runCli(["audit", repo, "--json", "--quiet"], { TRELLIS_DB: "" });
+		const cliAudit = await runCli(["audit", repo, "--json", "--quiet"], { UNSLOP_DB: "" });
 		expect(cliAudit.code).toBe(0);
 		expect(withoutRun(JSON.parse(cliAudit.stdout))).toEqual(withoutRun(standalone.report));
 	}, 20_000);
@@ -222,7 +222,7 @@ describe("client SDK fleet provider-capable parity (SPEC §16.4, §13.1, §11)",
 		).toEqual([]);
 
 		const cliFleet = await runCli(["fleet", "--targets", targetsFile, "--json"], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(cliFleet.code).toBe(0);
 		expect(comparableFleet(JSON.parse(cliFleet.stdout))).toEqual(comparableFleet(fleet));
@@ -249,11 +249,11 @@ describe("client SDK fleet provider-capable parity (SPEC §16.4, §13.1, §11)",
 			expect(entry.policy).toEqual(standalone.policy);
 			// The CLI's fleet and standalone audits fold the same member report.
 			const cliFleet = await runCli(["fleet", "--targets", targetsFile, "--json"], {
-				TRELLIS_DB: "",
+				UNSLOP_DB: "",
 			});
 			expect(cliFleet.code).toBe(0);
 			expect(comparableFleet(JSON.parse(cliFleet.stdout))).toEqual(comparableFleet(fleet));
-			const cliAudit = await runCli(["audit", cloned, "--json", "--quiet"], { TRELLIS_DB: "" });
+			const cliAudit = await runCli(["audit", cloned, "--json", "--quiet"], { UNSLOP_DB: "" });
 			expect(withoutRun(JSON.parse(cliAudit.stdout))).toEqual(withoutRun(standalone.report));
 			// The native neighbor still carries no external evidence.
 			const nativeEntry = fleet.entries.find((e) => e.id === "native");
@@ -311,7 +311,7 @@ console.log(JSON.stringify(result));\n`,
 		const cliFleet = await runCli(
 			["fleet", "--targets", targetsFile, "--json"],
 			{
-				TRELLIS_DB: "",
+				UNSLOP_DB: "",
 			},
 			{ main: join(install, "src", "cli", "main.ts") },
 		);
@@ -350,7 +350,7 @@ console.log(JSON.stringify({ report, assessment: sdk.assessFleet(report) }));\n`
 		const cliFleet = await runCli(
 			["fleet", "--targets", targetsFile, "--json"],
 			{
-				TRELLIS_DB: "",
+				UNSLOP_DB: "",
 			},
 			{ main: join(install, "src", "cli", "main.ts") },
 		);

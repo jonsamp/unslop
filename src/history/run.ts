@@ -9,7 +9,7 @@ import { buildHistory, type HistoryOptions, type HistoryReport } from "./dashboa
 
 /** Query for {@link buildReport} — the dashboard scope plus the store location. */
 export interface ReportRunOptions extends HistoryOptions {
-	/** SQLite history path; defaults to `$TRELLIS_DB` or `~/.trellis/trellis.db`. */
+	/** SQLite history path; defaults to `$UNSLOP_DB` or `~/.unslop/unslop.db`. */
 	db?: string;
 }
 

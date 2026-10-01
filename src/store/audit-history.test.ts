@@ -86,7 +86,7 @@ describe("audit history provenance and compatible series", () => {
 
 	beforeEach(() => {
 		dir = mkdtempSync(join(tmpdir(), "trellis-audit-history-"));
-		store = openStore(join(dir, "trellis.db"));
+		store = openStore(join(dir, "unslop.db"));
 	});
 
 	afterEach(() => {

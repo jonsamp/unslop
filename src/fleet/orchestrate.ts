@@ -134,7 +134,7 @@ export interface FleetRunDeps {
 	readonly now?: Date;
 	/** Opt-in persistence (SPEC §10): record each run and resolve a stored baseline. Default false. */
 	readonly history?: boolean;
-	/** SQLite history path (meaningful only with `history`); defaults to `$TRELLIS_DB` or `~/.trellis/trellis.db`. */
+	/** SQLite history path (meaningful only with `history`); defaults to `$UNSLOP_DB` or `~/.unslop/unslop.db`. */
 	readonly db?: string;
 }
 

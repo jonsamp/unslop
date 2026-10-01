@@ -30,7 +30,7 @@ async function cli(args: string[]) {
 		env: {
 			...process.env,
 			PATH: "",
-			TRELLIS_DB: join(artifacts, "unrequested.db"),
+			UNSLOP_DB: join(artifacts, "unrequested.db"),
 			TRELLIS_LOG_LEVEL: "silent",
 		},
 	});

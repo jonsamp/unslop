@@ -37,7 +37,7 @@ interface AuditCliOptions {
 	config?: string;
 	/** Opt-in persistence to the central SQLite history (SPEC §10). */
 	history?: boolean;
-	/** SQLite history path (requires `--history`); defaults to `$TRELLIS_DB` or `~/.trellis/trellis.db`. */
+	/** SQLite history path (requires `--history`); defaults to `$UNSLOP_DB` or `~/.unslop/unslop.db`. */
 	db?: string;
 	/** Suppress progress lines on stderr. */
 	quiet?: boolean;

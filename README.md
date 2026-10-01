@@ -155,7 +155,7 @@ unslop audit . --history
 unslop report
 ```
 
-History lives centrally in `~/.trellis/trellis.db`.
+History lives centrally in `~/.unslop/unslop.db`.
 
 For multiple repositories, declare targets and run the same audit across
 all of them:

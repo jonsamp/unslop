@@ -46,7 +46,7 @@ describe("trellis audit (deterministic core)", () => {
 		await seedFixtureRepo(dir, "sloppy");
 		// A central DB location outside the audited repo, so tests never touch ~/.trellis.
 		dbDir = mkdtempSync(join(tmpdir(), "trellis-cli-db-"));
-		dbPath = join(dbDir, "trellis.db");
+		dbPath = join(dbDir, "unslop.db");
 	});
 
 	afterEach(() => {
@@ -57,7 +57,7 @@ describe("trellis audit (deterministic core)", () => {
 	// Tests spawn the CLI as a subprocess (audit runs, reads); the 20s budget
 	// accommodates slow CI containers where the 5s default is marginal.
 	test("prints the terminal sloppiness report with direction and scoring version", async () => {
-		const { code, stdout } = await runCli(["audit", dir, "--quiet"], { TRELLIS_DB: dbPath });
+		const { code, stdout } = await runCli(["audit", dir, "--quiet"], { UNSLOP_DB: dbPath });
 		expect(code).toBe(0);
 		expect(stdout).toContain("sloppiness index");
 		expect(stdout).toContain("/100 · lower is better · scoring");
@@ -67,7 +67,7 @@ describe("trellis audit (deterministic core)", () => {
 
 	test("--json emits a parseable §6.4 report", async () => {
 		const { code, stdout } = await runCli(["audit", dir, "--json", "--quiet"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(0);
 		const report = JSON.parse(stdout);
@@ -82,7 +82,7 @@ describe("trellis audit (deterministic core)", () => {
 
 	test("--md emits a markdown summary", async () => {
 		const { code, stdout } = await runCli(["audit", dir, "--md", "--quiet"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(0);
 		expect(stdout).toContain("# trellis audit");
@@ -90,17 +90,17 @@ describe("trellis audit (deterministic core)", () => {
 	}, 20_000);
 
 	test("the default run is stateless: no database, no report files (SPEC §8, §10)", async () => {
-		const { code } = await runCli(["audit", dir, "--quiet"], { TRELLIS_DB: dbPath }, { cwd: dir });
+		const { code } = await runCli(["audit", dir, "--quiet"], { UNSLOP_DB: dbPath }, { cwd: dir });
 		expect(code).toBe(0);
 		expect(existsSync(dbPath)).toBe(false);
-		expect(existsSync(join(dir, ".trellis"))).toBe(false);
+		expect(existsSync(join(dir, ".unslop"))).toBe(false);
 	}, 20_000);
 
 	test("writes a JSON artifact without stdout when --out is supplied", async () => {
 		const out = join(dbDir, "report.json");
 		// No --quiet: the write notice lands on stderr (progress stays silent off-TTY).
 		const { code, stdout, stderr } = await runCli(["audit", dir, "--out", out], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(0);
 		expect(existsSync(out)).toBe(true);
@@ -113,7 +113,7 @@ describe("trellis audit (deterministic core)", () => {
 	test("--md overrides a .json extension for the --out artifact", async () => {
 		const out = join(dbDir, "report.json");
 		const { code, stdout } = await runCli(["audit", dir, "--quiet", "--md", "--out", out], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(0);
 		expect(readFileSync(out, "utf8").startsWith("#")).toBe(true);
@@ -127,7 +127,7 @@ describe("trellis audit (deterministic core)", () => {
 		if (failed) writeFileSync(join(dir, "trellis.yaml"), "policy:\n  maxIndex: 0\n");
 		const { code, stdout, stderr } = await runCli(
 			["audit", ".", "--json", "--out", "report.json"],
-			{ TRELLIS_DB: dbPath },
+			{ UNSLOP_DB: dbPath },
 			{ cwd: dir },
 		);
 		expect(code).toBe(failed ? 2 : 0);
@@ -142,7 +142,7 @@ describe("trellis audit (deterministic core)", () => {
 	test("a bad --out target fails fast before the audit runs (exit 1)", async () => {
 		const missing = join(dbDir, "no-such-dir", "report.json");
 		const { code, stdout, stderr } = await runCli(["audit", dir, "--out", missing], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(1);
 		expect(stderr).toContain("could not write report to");
@@ -151,12 +151,12 @@ describe("trellis audit (deterministic core)", () => {
 
 	test("--history persists the run and resolves the stored baseline next time", async () => {
 		const first = await runCli(["audit", dir, "--quiet", "--history", "--db", dbPath], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(first.code).toBe(0);
 		expect(existsSync(dbPath)).toBe(true);
 		const second = await runCli(["audit", dir, "--quiet", "--history", "--db", dbPath], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(second.code).toBe(0);
 		const { openStore } = await import("../store/index.ts");
@@ -172,7 +172,7 @@ describe("trellis audit (deterministic core)", () => {
 
 	test("--db without --history is an operational error (exit 1)", async () => {
 		const { code, stdout, stderr } = await runCli(["audit", dir, "--db", dbPath], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(code).toBe(1);
 		expect(stdout).toBe("");
@@ -182,7 +182,7 @@ describe("trellis audit (deterministic core)", () => {
 	test("a tripped maxIndex policy exits 2 with the report on stdout and reasons on stderr", async () => {
 		writeFileSync(join(dir, "trellis.yaml"), "policy:\n  maxIndex: 0\n");
 		const { code, stdout, stderr } = await runCli(["audit", dir, "--json", "--quiet"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(2);
 		// The report is still emitted — the policy trips after the run.
@@ -196,7 +196,7 @@ describe("trellis audit (deterministic core)", () => {
 		rmSync(dir, { recursive: true, force: true });
 		dir = mkdtempSync(join(tmpdir(), "trellis-cli-audit-"));
 		await seedFixtureRepo(dir, "clean");
-		const baselineRun = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+		const baselineRun = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 		expect(baselineRun.code).toBe(0);
 		const baselinePath = join(dbDir, "baseline.json");
 		writeFileSync(baselinePath, baselineRun.stdout);
@@ -205,7 +205,7 @@ describe("trellis audit (deterministic core)", () => {
 		writeFileSync(configPath, "policy:\n  regression: {}\n");
 		const { code, stdout, stderr } = await runCli(
 			["audit", dir, "--json", "--quiet", "--baseline", baselinePath, "--config", configPath],
-			{ TRELLIS_DB: dbPath },
+			{ UNSLOP_DB: dbPath },
 		);
 		expect(code).toBe(2);
 		expect(JSON.parse(stdout).score.index).toBeGreaterThan(0);
@@ -215,7 +215,7 @@ describe("trellis audit (deterministic core)", () => {
 	test("an unloadable --baseline artifact is operational (exit 1), never a policy failure", async () => {
 		const { code, stdout, stderr } = await runCli(
 			["audit", dir, "--quiet", "--baseline", join(dbDir, "absent.json")],
-			{ TRELLIS_DB: dbPath },
+			{ UNSLOP_DB: dbPath },
 		);
 		expect(code).toBe(1);
 		expect(stdout).toBe("");
@@ -227,7 +227,7 @@ describe("trellis audit (deterministic core)", () => {
 		writeFileSync(configPath, "policy:\n  maxIndex: 400\n");
 		const { code, stdout, stderr } = await runCli(
 			["audit", dir, "--quiet", "--config", configPath],
-			{ TRELLIS_DB: dbPath },
+			{ UNSLOP_DB: dbPath },
 		);
 		expect(code).toBe(1);
 		expect(stdout).toBe("");
@@ -236,7 +236,7 @@ describe("trellis audit (deterministic core)", () => {
 
 	test("--verbose progress goes to stderr, leaving stdout JSON parseable", async () => {
 		const { code, stdout, stderr } = await runCli(["audit", dir, "--json", "--verbose"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(0);
 		expect(() => JSON.parse(stdout)).not.toThrow();
@@ -245,7 +245,7 @@ describe("trellis audit (deterministic core)", () => {
 	}, 20_000);
 
 	test("--quiet emits no progress on stderr", async () => {
-		const { code, stderr } = await runCli(["audit", dir, "--quiet"], { TRELLIS_DB: dbPath });
+		const { code, stderr } = await runCli(["audit", dir, "--quiet"], { UNSLOP_DB: dbPath });
 		expect(code).toBe(0);
 		expect(stderr).toBe("");
 	}, 20_000);

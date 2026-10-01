@@ -34,7 +34,7 @@ describe("trellis report", () => {
 		repoDir = mkdtempSync(join(tmpdir(), "trellis-report-repo-"));
 		await seedFixtureRepo(repoDir, "sloppy");
 		workDir = mkdtempSync(join(tmpdir(), "trellis-report-work-"));
-		dbPath = join(workDir, "trellis.db");
+		dbPath = join(workDir, "unslop.db");
 	});
 
 	afterEach(() => {
@@ -45,7 +45,7 @@ describe("trellis report", () => {
 	/** Record one audit run of the fixture into the central history. */
 	async function auditRun(): Promise<void> {
 		const { code } = await runCli(["audit", repoDir, "--history", "--db", dbPath, "--quiet"], {
-			TRELLIS_DB: "",
+			UNSLOP_DB: "",
 		});
 		expect(code).toBe(0);
 	}
@@ -53,7 +53,7 @@ describe("trellis report", () => {
 	// Each test spawns the CLI 1-3 times (audit runs + report reads); the 20s
 	// budget accommodates slow CI containers where the 5s default is marginal.
 	test("reports an empty dashboard on a store with no runs", async () => {
-		const { code, stdout } = await runCli(["report", "--db", dbPath, "--json"], { TRELLIS_DB: "" });
+		const { code, stdout } = await runCli(["report", "--db", dbPath, "--json"], { UNSLOP_DB: "" });
 		expect(code).toBe(0);
 		const report = JSON.parse(stdout);
 		expect(report.audits.snapshot).toEqual([]);
@@ -64,7 +64,7 @@ describe("trellis report", () => {
 		await auditRun();
 		await auditRun();
 
-		const { code, stdout } = await runCli(["report", "--db", dbPath, "--json"], { TRELLIS_DB: "" });
+		const { code, stdout } = await runCli(["report", "--db", dbPath, "--json"], { UNSLOP_DB: "" });
 		expect(code).toBe(0);
 		const report = JSON.parse(stdout);
 
@@ -84,12 +84,12 @@ describe("trellis report", () => {
 	test("the --repo filter narrows the dashboard to one identity", async () => {
 		await auditRun();
 		const full = JSON.parse(
-			(await runCli(["report", "--db", dbPath, "--json"], { TRELLIS_DB: "" })).stdout,
+			(await runCli(["report", "--db", dbPath, "--json"], { UNSLOP_DB: "" })).stdout,
 		);
 		const identity = full.audits.snapshot[0].repo;
 		const { code, stdout } = await runCli(
 			["report", "--repo", identity, "--db", dbPath, "--json"],
-			{ TRELLIS_DB: "" },
+			{ UNSLOP_DB: "" },
 		);
 		expect(code).toBe(0);
 		const report = JSON.parse(stdout);
@@ -99,7 +99,7 @@ describe("trellis report", () => {
 
 	test("renders the human dashboard with the snapshot table after a run", async () => {
 		await auditRun();
-		const { code, stdout } = await runCli(["report", "--db", dbPath], { TRELLIS_DB: "" });
+		const { code, stdout } = await runCli(["report", "--db", dbPath], { UNSLOP_DB: "" });
 		expect(code).toBe(0);
 		expect(stdout).toContain("unslop report · sloppiness history");
 		expect(stdout).toContain("lower is better");

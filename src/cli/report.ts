@@ -10,7 +10,7 @@ interface ReportCliOptions {
 	md?: boolean;
 	repo?: string;
 	since?: string;
-	/** SQLite history path; defaults to `TRELLIS_DB` env or `~/.trellis/trellis.db`. */
+	/** SQLite history path; defaults to `UNSLOP_DB` env or `~/.unslop/unslop.db`. */
 	db?: string;
 }
 

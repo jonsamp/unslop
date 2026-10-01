@@ -215,14 +215,14 @@ describe("buildHistory", () => {
 
 	test("a latest foreign row headlines the snapshot but never implies a series", () => {
 		const dir = mkdtempSync(join(tmpdir(), "trellis-history-foreign-"));
-		const fileStore = openStore(join(dir, "trellis.db"));
+		const fileStore = openStore(join(dir, "unslop.db"));
 		try {
 			fileStore.insertAuditRun(
 				makeAuditReport({ root: dir, index: 12, auditedAt: "2026-07-01T00:00:00.000Z" }),
 			);
 			// A foreign writer's newest row: columns that look fine, JSON that is
 			// not a report this trellis can interpret.
-			const raw = new Database(join(dir, "trellis.db"));
+			const raw = new Database(join(dir, "unslop.db"));
 			raw
 				.query(
 					`INSERT INTO audit_runs

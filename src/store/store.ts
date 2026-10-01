@@ -14,14 +14,14 @@ export interface Store extends AuditStore {
 }
 
 /**
- * Resolve the DB path: an explicit argument wins, then `TRELLIS_DB`, else the
- * default `~/.trellis/trellis.db`. The in-memory sentinel passes through
+ * Resolve the DB path: an explicit argument wins, then `UNSLOP_DB`, else the
+ * default `~/.unslop/unslop.db`. The in-memory sentinel passes through
  * untouched. Central by construction — the default never lands in an audited repo.
  */
 export function resolveDbPath(explicit?: string): string {
-	const pick = explicit ?? process.env.TRELLIS_DB?.trim();
+	const pick = explicit ?? process.env.UNSLOP_DB?.trim();
 	if (pick && pick.length > 0) return pick;
-	return join(homedir(), ".trellis", "trellis.db");
+	return join(homedir(), ".unslop", "unslop.db");
 }
 
 /**

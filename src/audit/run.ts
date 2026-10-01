@@ -22,7 +22,7 @@ export interface WorkspaceAuditOptions {
 	baselinePath?: string;
 	/** Opt-in persistence (SPEC §10): record the run and resolve a stored baseline. Default false. */
 	history?: boolean;
-	/** SQLite history path (meaningful only with `history`); defaults to `$TRELLIS_DB` or `~/.trellis/trellis.db`. */
+	/** SQLite history path (meaningful only with `history`); defaults to `$UNSLOP_DB` or `~/.unslop/unslop.db`. */
 	db?: string;
 	/** Duplication resource budgets (SPEC §5.3); a resource knob, never a scoring input. */
 	duplicationBudget?: DuplicationBudget;

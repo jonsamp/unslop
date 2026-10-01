@@ -7,7 +7,7 @@ import { loadFleet, TARGETS_FILE } from "./targets.ts";
 export interface FleetRunOptions {
 	/** Opt-in persistence (SPEC §10): record each target's run and resolve stored baselines. Default false. */
 	history?: boolean;
-	/** SQLite history path (meaningful only with `history`); defaults to `$TRELLIS_DB` or `~/.trellis/trellis.db`. */
+	/** SQLite history path (meaningful only with `history`); defaults to `$UNSLOP_DB` or `~/.unslop/unslop.db`. */
 	db?: string;
 	/** Wall-clock pinned across the whole pass; defaults to now. */
 	now?: Date;

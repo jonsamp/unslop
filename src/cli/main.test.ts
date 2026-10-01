@@ -131,7 +131,7 @@ describe("trellis audit (program smoke)", () => {
 
 	test("prints the sloppiness report for a clean workspace (exit 0)", async () => {
 		const { code, stdout } = await runCli(["audit", dir, "--quiet"], {
-			TRELLIS_DB: join(dir, "trellis.db"),
+			UNSLOP_DB: join(dir, "unslop.db"),
 		});
 		expect(code).toBe(0);
 		expect(stdout).toContain("sloppiness index 0/100");

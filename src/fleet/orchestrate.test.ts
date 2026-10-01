@@ -205,7 +205,7 @@ describe("runFleetTargets (real core, two-repository fixtures)", () => {
 		sloppyRoot = join(dir, "sloppy");
 		await seedFixtureRepo(cleanRoot, "clean");
 		await seedFixtureRepo(sloppyRoot, "sloppy");
-		dbPath = join(dir, "trellis.db");
+		dbPath = join(dir, "unslop.db");
 		targetsFile = join(dir, "targets.yaml");
 	});
 

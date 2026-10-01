@@ -115,7 +115,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 		dir = mkdtempSync(join(tmpdir(), "trellis-cli-providers-"));
 		await seedClonePair(dir);
 		dbDir = mkdtempSync(join(tmpdir(), "trellis-cli-db-"));
-		dbPath = join(dbDir, "trellis.db");
+		dbPath = join(dbDir, "unslop.db");
 	});
 
 	afterEach(() => {
@@ -131,12 +131,12 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 			// Native default: no external evidence, and (with a provider selected)
 			// the score and the native metrics map stay identical — evidence is
 			// additive, never scored (§16.5).
-			const nativeRun = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+			const nativeRun = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 			expect(nativeRun.code).toBe(0);
 			const native = parseReport(nativeRun.stdout);
 			expect(externalEntries(native)).toEqual([]);
 			const run = await runCli(["audit", dir, "--json", "--quiet", "--provider", "jscpd:exact"], {
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			});
 			expect(run.code).toBe(0);
 			const report = parseReport(run.stdout);
@@ -154,7 +154,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 		"the trellis.yaml providers block configures the same core path",
 		async () => {
 			writeFileSync(join(dir, "trellis.yaml"), "providers:\n  jscpd:\n    mode: normalized\n");
-			const run = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+			const run = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 			expect(run.code).toBe(0);
 			const entry = providerEntry(parseReport(run.stdout), "jscpd");
 			expect(entry.state).toBe("complete");
@@ -171,7 +171,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 				"providers:\n  jscpd:\n    mode: exact\n  knip: {}\n",
 			);
 			const run = await runCli(["audit", dir, "--json", "--quiet", "--provider", "jscpd:near"], {
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			});
 			expect(run.code).toBe(0);
 			const report = parseReport(run.stdout);
@@ -214,7 +214,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 			},
 		];
 		for (const { args, stderrContains } of cases) {
-			const run = await runCli(["audit", dir, "--quiet", ...args], { TRELLIS_DB: dbPath });
+			const run = await runCli(["audit", dir, "--quiet", ...args], { UNSLOP_DB: dbPath });
 			expect(run.code).toBe(1);
 			expect(run.stdout).toBe("");
 			expect(run.stderr).toContain(stderrContains);
@@ -223,7 +223,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 
 	test("requests gated providers as located unsupported evidence (exit 0)", async () => {
 		const sonar = await runCli(["audit", dir, "--json", "--quiet", "--provider", "sonarjs"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(sonar.code).toBe(0);
 		const sonarEntry = providerEntry(parseReport(sonar.stdout), "sonarjs");
@@ -238,11 +238,11 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 		"requests the delivered knip adapter as advisory evidence without touching the score (exit 0)",
 		async () => {
 			const nativeRun = await runCli(["audit", dir, "--json", "--quiet"], {
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			});
 			expect(nativeRun.code).toBe(0);
 			const knip = await runCli(["audit", dir, "--json", "--quiet", "--provider", "knip"], {
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			});
 			expect(knip.code).toBe(0);
 			const report = parseReport(knip.stdout);
@@ -264,7 +264,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 		install = installCliWithoutPinnedTool();
 		const run = await runCli(
 			["audit", dir, "--json", "--quiet", "--provider", "jscpd:exact"],
-			{ TRELLIS_DB: dbPath },
+			{ UNSLOP_DB: dbPath },
 			{ main: join(install, "src", "cli", "main.ts") },
 		);
 		expect(run.code).toBe(0);
@@ -279,7 +279,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 		writeFileSync(join(dir, "trellis.yaml"), "policy:\n  requireEvidence: [jscpd]\n");
 		const run = await runCli(
 			["audit", dir, "--json", "--quiet", "--provider", "jscpd:exact"],
-			{ TRELLIS_DB: dbPath },
+			{ UNSLOP_DB: dbPath },
 			{ main: join(install, "src", "cli", "main.ts") },
 		);
 		expect(run.code).toBe(2);
@@ -291,7 +291,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 
 	test("an unrequested required provider fails closed (exit 2)", async () => {
 		writeFileSync(join(dir, "trellis.yaml"), "policy:\n  requireEvidence: [jscpd]\n");
-		const run = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+		const run = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 		expect(run.code).toBe(2);
 		expect(run.stderr).toContain("policy evidence-requirement failed");
 		expect(run.stderr).toContain("the run did not request it");
@@ -302,7 +302,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 	test("a required deferred capability fails closed (exit 2)", async () => {
 		writeFileSync(join(dir, "trellis.yaml"), "policy:\n  requireEvidence: [sonarjs]\n");
 		const run = await runCli(["audit", dir, "--json", "--quiet", "--provider", "sonarjs"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(run.code).toBe(2);
 		expect(providerEntry(parseReport(run.stdout), "sonarjs").state).toBe("unsupported");
@@ -317,7 +317,7 @@ describe("trellis audit --provider (provider selection, SPEC §16.4)", () => {
 			const out = join(dbDir, "report.json");
 			// No --quiet: the write notice lands on stderr (progress stays silent off-TTY).
 			const run = await runCli(["audit", dir, "--provider", "jscpd:exact", "--out", out], {
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			});
 			expect(run.code).toBe(0);
 			const artifact = parseReport(readFileSync(out, "utf8"));

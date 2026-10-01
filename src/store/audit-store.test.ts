@@ -80,7 +80,7 @@ describe("audit run storage", () => {
 
 	beforeEach(() => {
 		dir = mkdtempSync(join(tmpdir(), "trellis-audit-store-"));
-		store = openStore(join(dir, "trellis.db"));
+		store = openStore(join(dir, "unslop.db"));
 	});
 
 	afterEach(() => {
@@ -153,7 +153,7 @@ describe("audit run storage", () => {
 		store.insertAuditRun(makeAuditReport({ root: dir, index: 42 }));
 		store.close();
 
-		const reopened = openStore(join(dir, "trellis.db"));
+		const reopened = openStore(join(dir, "unslop.db"));
 		const latest = reopened.latestAuditRun(repoIdentity(dir, "fixture"));
 		expect(latest?.sloppinessIndex).toBe(42);
 		store = reopened; // hand back to afterEach for cleanup
@@ -166,7 +166,7 @@ describe("compatible run selection", () => {
 
 	beforeEach(() => {
 		dir = mkdtempSync(join(tmpdir(), "trellis-compat-"));
-		store = openStore(join(dir, "trellis.db"));
+		store = openStore(join(dir, "unslop.db"));
 	});
 
 	afterEach(() => {
@@ -182,7 +182,7 @@ describe("compatible run selection", () => {
 	 * silently trend it.
 	 */
 	function insertForeignSchemaRun(auditedAt: string, index: number): void {
-		const db = new Database(join(dir, "trellis.db"));
+		const db = new Database(join(dir, "unslop.db"));
 		db.query(
 			`INSERT INTO audit_runs
 			 (repo_root, repo_identity, schema_version, analyzer_version, scoring_version,
@@ -280,7 +280,7 @@ describe("disabled persistence", () => {
 	});
 
 	test("a fresh store records nothing until an insert is explicitly requested", () => {
-		const store = openStore(join(dir, "trellis.db"));
+		const store = openStore(join(dir, "unslop.db"));
 		try {
 			expect(store.auditRepos()).toEqual([]);
 			expect(store.latestAuditRun(repoIdentity(dir))).toBeNull();

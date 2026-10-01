@@ -51,7 +51,7 @@ describe("client SDK (deterministic surface)", () => {
 		dir = mkdtempSync(join(tmpdir(), "trellis-sdk-"));
 		await seedFixtureRepo(dir, "sloppy");
 		dbDir = mkdtempSync(join(tmpdir(), "trellis-sdk-db-"));
-		dbPath = join(dbDir, "trellis.db");
+		dbPath = join(dbDir, "unslop.db");
 	});
 
 	afterEach(() => {
@@ -61,7 +61,7 @@ describe("client SDK (deterministic surface)", () => {
 
 	test("audit() and the CLI produce deep-equal reports (one measurement code path)", async () => {
 		const sdk = await client.audit(dir);
-		const cli = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+		const cli = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 		expect(cli.code).toBe(0);
 		expect(withoutRun(sdk.report)).toEqual(withoutRun(JSON.parse(cli.stdout)));
 	});
@@ -72,24 +72,24 @@ describe("client SDK (deterministic surface)", () => {
 		expect(sdk.policy.failed).toBe(true);
 		const reason = sdk.policy.results.find((r) => r.status === "fail")?.reasons[0];
 		expect(reason?.code).toBe("index-exceeds-max");
-		const cli = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+		const cli = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 		expect(cli.code).toBe(2);
 		expect(JSON.parse(cli.stdout).score.index).toBe(sdk.report.score.index);
 		expect(cli.stderr).toContain(reason?.message ?? "unreachable");
 	});
 
 	test("audit() is stateless by default — no database, no files (SPEC §8, §10)", async () => {
-		const previousDb = process.env.TRELLIS_DB;
-		process.env.TRELLIS_DB = dbPath;
+		const previousDb = process.env.UNSLOP_DB;
+		process.env.UNSLOP_DB = dbPath;
 		try {
 			const result = await client.audit(dir);
 			expect(result.historyRunId).toBeUndefined();
 			expect(result.baseline).toBeUndefined();
 			expect(existsSync(dbPath)).toBe(false);
-			expect(existsSync(join(dir, ".trellis"))).toBe(false);
+			expect(existsSync(join(dir, ".unslop"))).toBe(false);
 		} finally {
-			if (previousDb === undefined) delete process.env.TRELLIS_DB;
-			else process.env.TRELLIS_DB = previousDb;
+			if (previousDb === undefined) delete process.env.UNSLOP_DB;
+			else process.env.UNSLOP_DB = previousDb;
 		}
 	});
 
@@ -169,7 +169,7 @@ describe("client SDK (deterministic surface)", () => {
 		try {
 			const sdk = await client.fleet(targetsPath);
 			const cli = await runCli(["fleet", "--targets", targetsPath, "--json"], {
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			});
 			expect(cli.code).toBe(0);
 			expect(stripFleetClock(sdk)).toEqual(stripFleetClock(JSON.parse(cli.stdout)));

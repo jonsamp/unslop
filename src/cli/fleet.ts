@@ -19,7 +19,7 @@ interface FleetCliOptions {
 	targets?: string;
 	/** Opt-in persistence (SPEC §10). */
 	history?: boolean;
-	/** SQLite history path; defaults to `TRELLIS_DB` env or `~/.trellis/trellis.db`. */
+	/** SQLite history path; defaults to `UNSLOP_DB` env or `~/.unslop/unslop.db`. */
 	db?: string;
 }
 

@@ -50,9 +50,9 @@ afterEach(async () => {
 
 describe("runWorkspaceAudit", () => {
 	test("audits a non-Git workspace with no credentials, tools, or writes (SPEC §8)", async () => {
-		const dbPath = join(dbDir, "trellis.db");
-		const previousDb = process.env.TRELLIS_DB;
-		process.env.TRELLIS_DB = dbPath;
+		const dbPath = join(dbDir, "unslop.db");
+		const previousDb = process.env.UNSLOP_DB;
+		process.env.UNSLOP_DB = dbPath;
 		try {
 			const result = await runWorkspaceAudit(root);
 			expect(result.report.schemaVersion).toBeDefined();
@@ -62,10 +62,10 @@ describe("runWorkspaceAudit", () => {
 			expect(result.historyRunId).toBeUndefined();
 			// Stateless: no database was opened and the workspace gained no files.
 			expect(existsSync(dbPath)).toBe(false);
-			expect(existsSync(join(root, ".trellis"))).toBe(false);
+			expect(existsSync(join(root, ".unslop"))).toBe(false);
 		} finally {
-			if (previousDb === undefined) delete process.env.TRELLIS_DB;
-			else process.env.TRELLIS_DB = previousDb;
+			if (previousDb === undefined) delete process.env.UNSLOP_DB;
+			else process.env.UNSLOP_DB = previousDb;
 		}
 	});
 
@@ -139,7 +139,7 @@ describe("runWorkspaceAudit", () => {
 	});
 
 	test("history persists the run and supplies the next run's baseline (SPEC §10)", async () => {
-		const dbPath = join(dbDir, "trellis.db");
+		const dbPath = join(dbDir, "unslop.db");
 		const first = await runWorkspaceAudit(root, { history: true, db: dbPath });
 		expect(first.historyRunId).toBeDefined();
 		expect(first.baseline).toBeUndefined(); // a first run has nothing to regress against
@@ -159,7 +159,7 @@ describe("runWorkspaceAudit", () => {
 	});
 
 	test("an advisory provider change between stored runs never fragments the baseline", async () => {
-		const dbPath = join(dbDir, "trellis.db");
+		const dbPath = join(dbDir, "unslop.db");
 		const first = await runWorkspaceAudit(root); // stateless: just the report
 		// A prior stored run carrying advisory jscpd evidence alongside the
 		// same native scored analyses — the shape step 15 will record.
@@ -189,7 +189,7 @@ describe("runWorkspaceAudit", () => {
 	});
 
 	test("a changed scored measurement starts a distinct series — no stored baseline", async () => {
-		const dbPath = join(dbDir, "trellis.db");
+		const dbPath = join(dbDir, "unslop.db");
 		const first = await runWorkspaceAudit(root);
 		// A prior stored run whose scored native analysis recorded a different
 		// pinned tool: same core versions, a different scored measurement.
@@ -229,7 +229,7 @@ describe("runWorkspaceAudit", () => {
 	});
 
 	test("an explicit baseline wins over the stored history baseline", async () => {
-		const dbPath = join(dbDir, "trellis.db");
+		const dbPath = join(dbDir, "unslop.db");
 		await runWorkspaceAudit(root, { history: true, db: dbPath });
 		const other = await mkdtemp(join(tmpdir(), "trellis-run-other-"));
 		try {

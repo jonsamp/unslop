@@ -146,7 +146,7 @@ describe("client SDK provider-capable parity (SPEC §16.4, §13.1)", () => {
 		dir = mkdtempSync(join(tmpdir(), "trellis-sdk-providers-"));
 		await seedClonePair(dir);
 		dbDir = mkdtempSync(join(tmpdir(), "trellis-sdk-providers-db-"));
-		dbPath = join(dbDir, "trellis.db");
+		dbPath = join(dbDir, "unslop.db");
 	});
 
 	afterEach(() => {
@@ -172,7 +172,7 @@ describe("client SDK provider-capable parity (SPEC §16.4, §13.1)", () => {
 			expect(core.policy.failed).toBe(false);
 			expect(sdk.policy.failed).toBe(core.policy.failed);
 			const cli = await runCli(["audit", dir, "--json", "--quiet", "--provider", "jscpd:exact"], {
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			});
 			expect(cli.code).toBe(0);
 			expect(withoutRun(sdk.report)).toEqual(withoutRun(JSON.parse(cli.stdout)));
@@ -204,7 +204,7 @@ describe("client SDK provider-capable parity (SPEC §16.4, §13.1)", () => {
 		async () => {
 			writeFileSync(join(dir, "trellis.yaml"), "providers:\n  jscpd:\n    mode: normalized\n");
 			const sdk = await client.audit(dir);
-			const cli = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+			const cli = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 			expect(cli.code).toBe(0);
 			expect(withoutRun(sdk.report)).toEqual(withoutRun(JSON.parse(cli.stdout)));
 			const entry = providerEntry(sdk.report, "jscpd");
@@ -233,7 +233,7 @@ describe("client SDK provider-capable parity (SPEC §16.4, §13.1)", () => {
 		expect(sdk.report.score.partial).toBe(false);
 		const cli = await runCli(
 			["audit", dir, "--json", "--quiet", "--provider", "jscpd:exact"],
-			{ TRELLIS_DB: dbPath },
+			{ UNSLOP_DB: dbPath },
 			{ main: join(install, "src", "cli", "main.ts") },
 		);
 		expect(cli.code).toBe(0);
@@ -254,7 +254,7 @@ describe("client SDK provider-capable parity (SPEC §16.4, §13.1)", () => {
 		expect(providerEntry(sdk.report, "jscpd").state).toBe("unavailable");
 		const cli = await runCli(
 			["audit", dir, "--json", "--quiet"],
-			{ TRELLIS_DB: dbPath },
+			{ UNSLOP_DB: dbPath },
 			{ main: join(install, "src", "cli", "main.ts") },
 		);
 		expect(cli.code).toBe(2);
@@ -271,7 +271,7 @@ describe("client SDK provider-capable parity (SPEC §16.4, §13.1)", () => {
 		expect(reason.code).toBe("requirement-analysis-unrequested");
 		expect(reason.message).toContain("the run did not request it");
 		expect(externalProviderIds(sdk.report)).toEqual([]);
-		const cli = await runCli(["audit", dir, "--json", "--quiet"], { TRELLIS_DB: dbPath });
+		const cli = await runCli(["audit", dir, "--json", "--quiet"], { UNSLOP_DB: dbPath });
 		expect(cli.code).toBe(2);
 		expect(withoutRun(sdk.report)).toEqual(withoutRun(JSON.parse(cli.stdout)));
 		expect(cli.stderr).toContain(reason.message);
@@ -294,7 +294,7 @@ describe("client SDK provider-capable parity (SPEC §16.4, §13.1)", () => {
 		const reason = failedReason(sdk);
 		expect(reason.code).toBe("requirement-evidence-unsupported");
 		const cli = await runCli(["audit", dir, "--json", "--quiet", "--provider", "sonarjs"], {
-			TRELLIS_DB: dbPath,
+			UNSLOP_DB: dbPath,
 		});
 		expect(cli.code).toBe(2);
 		expect(withoutRun(sdk.report)).toEqual(withoutRun(JSON.parse(cli.stdout)));
@@ -358,7 +358,7 @@ describe("client SDK provider-capable parity (SPEC §16.4, §13.1)", () => {
 			expect(sdkMessage).toMatch(message);
 			// …and the CLI maps the identical core error onto exit 1.
 			const cli = await runCli(["audit", dir, "--config", configPath, "--quiet"], {
-				TRELLIS_DB: dbPath,
+				UNSLOP_DB: dbPath,
 			});
 			expect(cli.code).toBe(1);
 			expect(cli.stdout).toBe("");

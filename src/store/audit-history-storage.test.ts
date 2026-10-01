@@ -42,7 +42,7 @@ describe("audit history over shared storage", () => {
 
 	beforeEach(() => {
 		dir = mkdtempSync(join(tmpdir(), "trellis-audit-shared-"));
-		store = openStore(join(dir, "trellis.db"));
+		store = openStore(join(dir, "unslop.db"));
 	});
 
 	afterEach(() => {
@@ -56,7 +56,7 @@ describe("audit history over shared storage", () => {
 	 * stored JSON, not the columns, must decide compatibility.
 	 */
 	function insertRawRun(reportJson: string, auditedAt: string, index: number): void {
-		const db = new Database(join(dir, "trellis.db"));
+		const db = new Database(join(dir, "unslop.db"));
 		db.query(
 			`INSERT INTO audit_runs
 			 (repo_root, repo_identity, schema_version, analyzer_version, scoring_version,
@@ -152,7 +152,7 @@ describe("a pre-existing history database", () => {
 	});
 
 	test("rows persisted before the provider plan keep loading and trending in place", () => {
-		const dbPath = join(dir, "trellis.db");
+		const dbPath = join(dir, "unslop.db");
 		const root = join(dir, "workspace");
 		mkdirSync(root, { recursive: true });
 		// Simulate the on-disk state exactly as the pre-step-8 code left it:

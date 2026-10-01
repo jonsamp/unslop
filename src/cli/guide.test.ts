@@ -18,7 +18,7 @@ describe("guide", () => {
 			env: {
 				PATH: "",
 				HOME: cwd,
-				TRELLIS_DB: join(cwd, "unused.db"),
+				UNSLOP_DB: join(cwd, "unused.db"),
 				// Exclude Bun's own transpiler cache from the Trellis no-write assertion.
 				BUN_RUNTIME_TRANSPILER_CACHE_PATH: "0",
 			},
