@@ -148,6 +148,22 @@ describe("discoverSourceInventory classification scopes", () => {
 		]);
 	});
 
+	test("build-output names are matched at the repo root only, never at depth", async () => {
+		await put("package.json", JSON.stringify({ name: "app" }));
+		await put("build/out.ts", "export {}\n");
+		await put("src/screens/build/index.ts", "export {}\n");
+		await put("src/screens/build/nested/detail.ts", "export {}\n");
+		await put("app/dist/widget.ts", "export {}\n");
+
+		const inv = await discoverSourceInventory(repo);
+		expect(inv.files.map((file) => file.path)).toEqual([
+			"app/dist/widget.ts",
+			"src/screens/build/index.ts",
+			"src/screens/build/nested/detail.ts",
+		]);
+		expect(inv.excluded).toEqual([{ path: "build/out.ts", reason: "build-output" }]);
+	});
+
 	test("config classify overrides assign explicit source sets", async () => {
 		await put("package.json", JSON.stringify({ name: "app" }));
 		await put("scripts/tools/build.ts", "export {}\n");

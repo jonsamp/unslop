@@ -34,6 +34,8 @@ const DEPENDENCY_DIRS = new Set(["node_modules"]);
 /**
  * Build-output dirs whose TS/TSX content is counted as `excluded` coverage —
  * compiled artifacts are not source debt, but they are reported, not hidden.
+ * Matched at the repo root only: `build` and `out` are ordinary words that
+ * also name real source directories at depth (`src/screens/build/`).
  */
 const BUILD_OUTPUT_DIRS = new Set(["dist", "build", "out", "coverage"]);
 
@@ -159,7 +161,7 @@ async function handleDirectory(ctx: WalkContext, name: string, rel: string): Pro
 		...ctx,
 		absDir: join(ctx.absDir, name),
 		relDir: rel,
-		inBuildOutput: ctx.inBuildOutput || BUILD_OUTPUT_DIRS.has(name),
+		inBuildOutput: ctx.inBuildOutput || (ctx.relDir === "" && BUILD_OUTPUT_DIRS.has(name)),
 	});
 }
 
