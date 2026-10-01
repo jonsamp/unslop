@@ -54,7 +54,12 @@ describe("renderAuditTerminal across the render fixtures", () => {
 		const fixture = fixtures.get("sloppy");
 		if (fixture === undefined) throw new Error("fixture sloppy not built");
 		const output = renderAuditTerminal(fixture.report);
-		const hotspotSection = output.slice(output.indexOf("hotspots ("));
+		// Bounded at the score block, which now follows the findings and whose
+		// dimension names share the finding-kind vocabulary.
+		const hotspotSection = output.slice(
+			output.indexOf("hotspots ("),
+			output.indexOf("score contributions"),
+		);
 		const hotspotLines = hotspotSection
 			.split("\n")
 			.filter((line) =>

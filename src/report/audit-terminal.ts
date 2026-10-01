@@ -37,13 +37,9 @@ function padStart(s: string, width: number): string {
 	return s.length >= width ? s : " ".repeat(width - s.length) + s;
 }
 
-/** The headline block: title, score (direction + version), completeness, run metadata. */
-function headerLines(report: AuditReport): string[] {
-	const lines = [
-		`unslop audit · ${repoLabel(report)}`,
-		scoreHeadline(report),
-		`completeness: ${report.completeness}`,
-	];
+/** The title block: what was audited, how complete it is, and when it ran. */
+function titleLines(report: AuditReport): string[] {
+	const lines = [`unslop audit · ${repoLabel(report)}`, `completeness: ${report.completeness}`];
 	if (report.run?.auditedAt !== undefined) {
 		const duration =
 			report.run.durationMs === undefined ? "" : ` · ${formatNumber(report.run.durationMs)}ms`;
@@ -135,9 +131,8 @@ export function renderAuditTerminal(
 	options: AuditTerminalOptions = {},
 ): string {
 	const sections = [
-		headerLines(report),
+		titleLines(report),
 		coverageLines(report),
-		contributionLines(report),
 		metricLines(report),
 		boundedFindingLines(
 			"hotspots",
@@ -150,6 +145,8 @@ export function renderAuditTerminal(
 		),
 		safeguardLines(report),
 		providerAnalysisLines(report, options.providerFindingLimit ?? DEFAULT_HOTSPOT_LIMIT),
+		contributionLines(report),
+		[scoreHeadline(report)],
 	].filter((section) => section.length > 0);
 	return sections.map((section) => section.join("\n")).join("\n\n");
 }
