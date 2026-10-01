@@ -1,10 +1,10 @@
 {
-	"name": "@os-eco/trellis-cli",
+	"name": "unslop",
 	"version": "0.3.0",
 	"description": "Offline TypeScript structural audit with a native 0–100 sloppiness index and optional unscored provider evidence",
 	"type": "module",
 	"bin": {
-		"trellis": "./src/cli/main.ts"
+		"unslop": "./src/cli/main.ts"
 	},
 	"main": "src/index.ts",
 	"exports": {

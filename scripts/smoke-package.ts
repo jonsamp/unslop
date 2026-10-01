@@ -6,7 +6,7 @@
  * dir, and confirms the package still ships every asset
  * the analyzer needs:
  *
- *   1. **Metadata** — the `trellis` bin entry and the runtime dependencies
+ *   1. **Metadata** — the `unslop` bin entry and the runtime dependencies
  *      the analyzer requires (commander, js-yaml, typescript, zod).
  *   2. **Analyzer assets** — the audit core, metrics, shared syntax layer,
  *      scoring formula, comparison/policy, configuration and report
@@ -105,9 +105,9 @@ export function verifyPackedMetadata(packageDir: string): void {
 	const manifest = JSON.parse(
 		readFileSync(join(packageDir, "package.json"), "utf8"),
 	) as PackedPackageJson;
-	const bin = manifest.bin?.trellis;
+	const bin = manifest.bin?.unslop;
 	if (bin === undefined || !existsSync(join(packageDir, bin))) {
-		throw new Error(`packed package has no usable bin.trellis entry (got ${String(bin)})`);
+		throw new Error(`packed package has no usable bin.unslop entry (got ${String(bin)})`);
 	}
 	const missing = REQUIRED_DEPENDENCIES.filter((dep) => manifest.dependencies?.[dep] === undefined);
 	if (missing.length > 0) {

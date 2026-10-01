@@ -25,7 +25,7 @@ describe("verifyPackedMetadata", () => {
 			writeFileSync(
 				join(dir, "package.json"),
 				JSON.stringify({
-					bin: { trellis: "./src/cli/main.ts" },
+					bin: { unslop: "./src/cli/main.ts" },
 					dependencies: { commander: "1", "js-yaml": "1", typescript: "1", zod: "1" },
 				}),
 			);
@@ -40,9 +40,9 @@ describe("verifyPackedMetadata", () => {
 		try {
 			writeFileSync(
 				join(dir, "package.json"),
-				JSON.stringify({ bin: { trellis: "./src/cli/main.ts" }, dependencies: {} }),
+				JSON.stringify({ bin: { unslop: "./src/cli/main.ts" }, dependencies: {} }),
 			);
-			expect(() => verifyPackedMetadata(dir)).toThrow(/bin\.trellis/);
+			expect(() => verifyPackedMetadata(dir)).toThrow(/bin\.unslop/);
 		} finally {
 			rmSync(dir, { recursive: true, force: true });
 		}
@@ -55,7 +55,7 @@ describe("verifyPackedMetadata", () => {
 			writeFileSync(join(dir, "src/cli/main.ts"), "// bin\n");
 			writeFileSync(
 				join(dir, "package.json"),
-				JSON.stringify({ bin: { trellis: "./src/cli/main.ts" }, dependencies: { commander: "1" } }),
+				JSON.stringify({ bin: { unslop: "./src/cli/main.ts" }, dependencies: { commander: "1" } }),
 			);
 			expect(() => verifyPackedMetadata(dir)).toThrow(/typescript/);
 		} finally {

@@ -240,7 +240,7 @@ describe("trellis audit (deterministic core)", () => {
 		});
 		expect(code).toBe(0);
 		expect(() => JSON.parse(stdout)).not.toThrow();
-		expect(stderr).toContain("trellis:");
+		expect(stderr).toContain("unslop:");
 		expect(stderr).toContain("measuring");
 	}, 20_000);
 

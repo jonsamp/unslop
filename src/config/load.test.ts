@@ -35,8 +35,8 @@ describe("loadAuditConfig", () => {
 		});
 	});
 
-	test("trellis.yml is the fallback filename", async () => {
-		expect(CONFIG_FILENAMES).toEqual(["trellis.yaml", "trellis.yml"]);
+	test("unslop.yaml leads, with unslop.yml and the trellis names as fallbacks", async () => {
+		expect(CONFIG_FILENAMES).toEqual(["unslop.yaml", "unslop.yml", "trellis.yaml", "trellis.yml"]);
 		await writeFile(join(repo, "trellis.yml"), "source:\n  exclude:\n    - 'dist/**'\n");
 		const config = await loadAuditConfig(repo);
 		expect(config.source.exclude).toEqual(["dist/**"]);

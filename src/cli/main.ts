@@ -31,7 +31,7 @@ export function buildProgram(): Command {
 	const program = new Command();
 
 	program
-		.name("trellis")
+		.name("unslop")
 		.description(
 			"Deterministic sloppiness audit for TypeScript workspaces (0-100, lower is better)",
 		)
@@ -74,7 +74,7 @@ export async function run(argv: string[]): Promise<number> {
 		// A tripped --fail-on policy: the report is already on stdout, so just note
 		// the reasons on stderr and surface the non-zero code (SPEC §12).
 		if (error instanceof FailOnExit) {
-			for (const reason of error.reasons) process.stderr.write(`trellis: ${reason}\n`);
+			for (const reason of error.reasons) process.stderr.write(`unslop: ${reason}\n`);
 			return error.code;
 		}
 		if (error instanceof CliError) {

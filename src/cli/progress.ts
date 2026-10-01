@@ -67,27 +67,27 @@ function phaseLabel(phase: AuditPhase): string {
 function render(event: AuditEvent, verbose: boolean, write: (line: string) => void): void {
 	switch (event.type) {
 		case "phase":
-			write(`trellis: ${phaseLabel(event.phase)}…\n`);
+			write(`unslop: ${phaseLabel(event.phase)}…\n`);
 			return;
 		case "source-discovered":
-			write(`trellis: discovered ${event.files} file(s) in ${event.packages} package(s)\n`);
+			write(`unslop: discovered ${event.files} file(s) in ${event.packages} package(s)\n`);
 			return;
 		case "syntax-built":
 			if (verbose)
-				write(`trellis: parsed ${event.files} file(s) · ${event.functions} function(s)\n`);
+				write(`unslop: parsed ${event.files} file(s) · ${event.functions} function(s)\n`);
 			return;
 		case "analyzer":
-			if (verbose) write(`trellis:   [${event.index + 1}/${event.total}] ${event.id}\n`);
+			if (verbose) write(`unslop:   [${event.index + 1}/${event.total}] ${event.id}\n`);
 			return;
 		case "measured":
 			if (verbose)
-				write(`trellis: measured ${event.metrics} metric(s) · ${event.findings} finding(s)\n`);
+				write(`unslop: measured ${event.metrics} metric(s) · ${event.findings} finding(s)\n`);
 			return;
 		case "safeguards-inspected":
-			if (verbose) write(`trellis: inspected ${event.results} safeguard(s)\n`);
+			if (verbose) write(`unslop: inspected ${event.results} safeguard(s)\n`);
 			return;
 		case "scored":
-			write(`trellis: sloppiness index ${event.index}/100\n`);
+			write(`unslop: sloppiness index ${event.index}/100\n`);
 			return;
 	}
 }

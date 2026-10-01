@@ -123,14 +123,14 @@ export function writeReportFile(path: string, format: OutputFormat, rendered: Re
 /**
  * Render a {@link CliError} to stderr in the caller's format and return its exit
  * code. JSON callers get `{ "error": { message, id?, file? } }`; everyone else
- * gets a `trellis: <message>` line.
+ * gets a `unslop: <message>` line.
  */
 export function renderError(error: CliError, format: OutputFormat): number {
 	if (format === "json") {
 		const payload = { error: { message: error.message, ...error.detail } };
 		process.stderr.write(`${JSON.stringify(payload, null, 2)}\n`);
 	} else {
-		process.stderr.write(`trellis: ${error.message}\n`);
+		process.stderr.write(`unslop: ${error.message}\n`);
 	}
 	return error.code;
 }

@@ -187,7 +187,7 @@ async function runAuditCommand(repoPath: string, opts: AuditCliOptions): Promise
 	// --out selects the file destination; otherwise emit the report to stdout.
 	if (opts.out !== undefined) {
 		writeReportFile(opts.out, formatForPath(opts.out, format), rendered);
-		if (!quiet) process.stderr.write(`trellis: report written to ${opts.out}\n`);
+		if (!quiet) process.stderr.write(`unslop: report written to ${opts.out}\n`);
 	} else {
 		emit(format, rendered);
 	}

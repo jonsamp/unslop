@@ -40,7 +40,7 @@ function padStart(s: string, width: number): string {
 /** The headline block: title, score (direction + version), completeness, run metadata. */
 function headerLines(report: AuditReport): string[] {
 	const lines = [
-		`trellis audit · ${repoLabel(report)}`,
+		`unslop audit · ${repoLabel(report)}`,
 		scoreHeadline(report),
 		`completeness: ${report.completeness}`,
 	];
