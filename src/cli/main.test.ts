@@ -87,7 +87,7 @@ describe("trellis drift", () => {
 	test("prints a per-file drift table for a repo lacking canonical files", async () => {
 		const { code, stdout } = await runCli(["drift", dir, "--fail-on", "none"]);
 		expect(code).toBe(0);
-		expect(stdout).toContain("trellis drift");
+		expect(stdout).toContain("unslop drift");
 		expect(stdout).toContain("biome.json");
 		expect(stdout).toContain("MISS");
 	}, 20_000);

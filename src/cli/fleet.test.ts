@@ -58,7 +58,7 @@ describe("trellis fleet", () => {
 			TRELLIS_DB: "",
 		});
 		expect(code).toBe(2);
-		expect(stdout).toContain("trellis fleet");
+		expect(stdout).toContain("unslop fleet");
 		expect(stdout).toContain("lower is better");
 		expect(stdout).toContain("fixture");
 		expect(stdout).toContain("1 ok · 1 error · 0 policy failed");

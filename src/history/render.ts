@@ -79,7 +79,7 @@ function pushRepo(lines: string[], repo: AuditRepoHistory): void {
 
 /** Render a history report as the default human-readable terminal dashboard. */
 export function renderHistoryTerminal(report: HistoryReport): string {
-	const lines = ["trellis report · sloppiness history", scopeLine(report), ""];
+	const lines = ["unslop report · sloppiness history", scopeLine(report), ""];
 	pushSnapshot(lines, report.audits.snapshot);
 	for (const repo of report.audits.repos) {
 		lines.push("");

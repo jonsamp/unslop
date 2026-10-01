@@ -157,7 +157,7 @@ export function renderComparisonTerminal(
 	options: ComparisonRenderOptions = {},
 ): string {
 	const lines: string[] = [
-		`trellis compare · ${repoLabel(baseline)} → ${repoLabel(current)}`,
+		`unslop compare · ${repoLabel(baseline)} → ${repoLabel(current)}`,
 		...compatibilityLines(comparison),
 		...terminalScoreLine(comparison, current),
 		...terminalMetricLines(comparison, options.metricLimit ?? DEFAULT_METRIC_LIMIT),

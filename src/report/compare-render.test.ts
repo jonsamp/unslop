@@ -47,7 +47,7 @@ describe("renderComparisonTerminal", () => {
 	test("renders comparability, the index delta with direction, and bounded deltas", async () => {
 		pair = await compareFixtures("clean", "sloppy");
 		const text = renderComparisonTerminal(pair.comparison, pair.baseline, pair.current);
-		expect(text).toContain("trellis compare ·");
+		expect(text).toContain("unslop compare ·");
 		expect(text).toContain("comparable: yes");
 		expect(text).toMatch(/index: 0\/100 → \d+\/100 \(\+\d+\) · lower is better · scoring/);
 		expect(text).toContain("metric deltas:");

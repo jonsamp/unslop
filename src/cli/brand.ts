@@ -37,7 +37,7 @@ export function registerBrand(program: Command): void {
 
 function humanBrand(report: BrandReport): string {
 	const lines = [
-		`trellis brand · ${report.repo} · ${report.findings.length} findings / ${report.rules.length} rules`,
+		`unslop brand · ${report.repo} · ${report.findings.length} findings / ${report.rules.length} rules`,
 	];
 	for (const finding of report.findings) lines.push(`  ${finding.rule}: ${finding.detail}`);
 	return lines.join("\n");

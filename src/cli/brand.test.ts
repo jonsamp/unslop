@@ -36,7 +36,7 @@ describe("trellis brand", () => {
 	test("prints findings and exits 0 by default", async () => {
 		const { code, stdout } = await runCli(["brand", dir]);
 		expect(code).toBe(0);
-		expect(stdout).toContain("trellis brand");
+		expect(stdout).toContain("unslop brand");
 		expect(stdout).toContain("4 findings / 4 rules");
 		expect(stdout).toContain("readme-badges: README.md lacks badges: npm, CI, license");
 	}, 20_000);

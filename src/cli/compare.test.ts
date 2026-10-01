@@ -62,7 +62,7 @@ describe("trellis compare", () => {
 	test("prints the comparison summary for a comparable pair (exit 0)", async () => {
 		const { code, stdout } = await runCli(["compare", clean, sloppy]);
 		expect(code).toBe(0);
-		expect(stdout).toContain("trellis compare ·");
+		expect(stdout).toContain("unslop compare ·");
 		expect(stdout).toContain("comparable: yes");
 		expect(stdout).toMatch(/index: 0\/100 → \d+\/100 \(\+\d+\) · lower is better/);
 		expect(stdout).toContain("metric deltas:");
@@ -97,7 +97,7 @@ describe("trellis compare", () => {
 			configPath,
 		]);
 		expect(code).toBe(2);
-		expect(stdout).toContain("trellis compare ·");
+		expect(stdout).toContain("unslop compare ·");
 		expect(stderr).toContain("policy score-regression failed");
 		expect(stderr).toContain("policy new-findings failed");
 	}, 20_000);

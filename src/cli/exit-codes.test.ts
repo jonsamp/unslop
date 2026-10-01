@@ -124,7 +124,7 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 		);
 		const fail = await runCli(["fleet", "--targets", targets], { TRELLIS_DB: "" });
 		expect(fail.code).toBe(2);
-		expect(fail.stdout).toContain("trellis fleet");
+		expect(fail.stdout).toContain("unslop fleet");
 		expect(fail.stderr).toContain("gone");
 	}, 20_000);
 
@@ -134,7 +134,7 @@ describe("trellis exit-code contract (SPEC §9)", () => {
 		writeFileSync(targets, `targets:\n  - id: fixture\n    path: ${dir}\n`);
 		const tripped = await runCli(["fleet", "--targets", targets], { TRELLIS_DB: "" });
 		expect(tripped.code).toBe(2);
-		expect(tripped.stdout).toContain("trellis fleet");
+		expect(tripped.stdout).toContain("unslop fleet");
 		expect(tripped.stderr).toContain("fixture: policy failed");
 		// Operational: the fleet declaration itself is broken — nothing on stdout, exit 1.
 		const broken = await runCli(["fleet", "--targets", join(dbDir, "absent.yaml")], {

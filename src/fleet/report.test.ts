@@ -74,7 +74,7 @@ describe("fleet renderers", () => {
 
 		test("marks the index, policy failure, drift counts, delta, and errors inline", () => {
 			const out = renderFleetTerminal(REPORT);
-			expect(out).toContain("trellis fleet");
+			expect(out).toContain("unslop fleet");
 			expect(out).toContain("lower is better");
 			expect(out).toContain(`${clean.report.score.index}/100`);
 			expect(out).toContain("FAIL"); // tripped declarative policy

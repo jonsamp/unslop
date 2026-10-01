@@ -37,7 +37,7 @@ function pad(s: string, width: number): string {
 function humanManifest(manifest: Manifest): string {
 	const pathWidth = Math.max(4, ...manifest.files.map((f) => f.path.length));
 	const lines = [
-		`trellis standards · canonical set ${manifest.version} · ${manifest.files.length} files`,
+		`unslop standards · canonical set ${manifest.version} · ${manifest.files.length} files`,
 		"",
 		`  ${pad("file", pathWidth)}  ${pad("version", 7)}  matcher`,
 	];

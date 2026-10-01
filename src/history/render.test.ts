@@ -65,7 +65,7 @@ describe("renderHistoryTerminal", () => {
 
 	test("marks the direction, delta, partial state, and per-repo trend", () => {
 		const out = renderHistoryTerminal(REPORT);
-		expect(out).toContain("trellis report · sloppiness history");
+		expect(out).toContain("unslop report · sloppiness history");
 		expect(out).toContain("lower is better");
 		expect(out).toContain("14/100");
 		expect(out).toContain("+4"); // worsened vs the previous compatible run

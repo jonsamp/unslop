@@ -101,7 +101,7 @@ describe("trellis report", () => {
 		await auditRun();
 		const { code, stdout } = await runCli(["report", "--db", dbPath], { TRELLIS_DB: "" });
 		expect(code).toBe(0);
-		expect(stdout).toContain("trellis report · sloppiness history");
+		expect(stdout).toContain("unslop report · sloppiness history");
 		expect(stdout).toContain("lower is better");
 		expect(stdout).toContain("fixture-sloppy#");
 	}, 20_000);

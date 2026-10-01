@@ -45,7 +45,7 @@ function summaryLine(report: DriftReport): string {
 export function renderDriftTerminal(report: DriftReport): string {
 	const pathWidth = Math.max(4, ...report.files.map((f) => f.path.length));
 	const lines = [
-		`trellis drift · ${report.repo} · canonical ${report.canonicalVersion}`,
+		`unslop drift · ${report.repo} · canonical ${report.canonicalVersion}`,
 		"",
 		`  ${pad("file", pathWidth)}  ${pad("state", 6)}  ${pad("matcher", 11)}  note`,
 	];

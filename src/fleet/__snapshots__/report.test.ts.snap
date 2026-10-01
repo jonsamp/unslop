@@ -1,7 +1,7 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`fleet renderers renderFleetTerminal renders the aggregate dashboard 1`] = `
-"trellis fleet · 4 targets · 3 ok · 1 error · 1 policy failed
+"unslop fleet · 4 targets · 3 ok · 1 error · 1 policy failed
 audited 2026-06-06T00:00:00.000Z · index 0–100, lower is better
 
   target    index  state     evidence  findings  policy  drift             Δ     note

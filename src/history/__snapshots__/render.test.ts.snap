@@ -1,7 +1,7 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`renderHistoryTerminal renders the dashboard 1`] = `
-"trellis report · sloppiness history
+"unslop report · sloppiness history
 scope: all repos · all time
 
 sloppiness snapshot (2) · index 0–100, lower is better

@@ -96,7 +96,7 @@ export function renderFleetTerminal(report: FleetReport): string {
 	const driftWidth = Math.max(5, ...report.entries.map((e) => driftCell(e).length));
 	const evidenceWidth = Math.max(8, ...report.entries.map((e) => evidenceCell(e).length));
 	const lines = [
-		`trellis fleet · ${headline(report)}`,
+		`unslop fleet · ${headline(report)}`,
 		`audited ${report.auditedAt} · index 0–100, lower is better`,
 		"",
 		`  ${pad("target", idWidth)}  ${padStart("index", 6)}  ${pad("state", 8)}  ${pad("evidence", evidenceWidth)}  ${padStart("findings", 8)}  ${pad("policy", 6)}  ${pad("drift", driftWidth)}  ${pad("Δ", 4)}  note`,
