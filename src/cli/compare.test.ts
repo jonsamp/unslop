@@ -82,7 +82,7 @@ describe("trellis compare", () => {
 	test("--md emits a markdown summary", async () => {
 		const { code, stdout } = await runCli(["compare", clean, sloppy, "--md"]);
 		expect(code).toBe(0);
-		expect(stdout).toContain("# trellis compare —");
+		expect(stdout).toContain("# unslop compare —");
 		expect(stdout).toContain("## Index");
 	}, 20_000);
 

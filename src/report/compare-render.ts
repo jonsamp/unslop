@@ -232,7 +232,7 @@ export function renderComparisonMarkdown(
 	options: ComparisonRenderOptions = {},
 ): string {
 	const lines: string[] = [
-		`# trellis compare — ${repoLabel(baseline)} → ${repoLabel(current)}`,
+		`# unslop compare — ${repoLabel(baseline)} → ${repoLabel(current)}`,
 		"",
 		...compatibilityLines(comparison).map((line) => line.trimStart()),
 		...markdownScoreSection(comparison, current),

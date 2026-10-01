@@ -48,9 +48,9 @@ export function renderAuditMarkdown(
 	const findingLimit = options.findingLimit ?? DEFAULT_HOTSPOT_LIMIT;
 
 	const lines: string[] = [
-		`# trellis audit — ${repoLabel(report)}`,
+		`# unslop audit — ${repoLabel(report)}`,
 		"",
-		`**${scoreHeadline(report)}** · completeness: ${report.completeness}`,
+		`completeness: ${report.completeness}`,
 		"",
 		"## Source coverage",
 		"",
@@ -59,21 +59,6 @@ export function renderAuditMarkdown(
 	];
 	for (const row of coverageRows(report.sourceCoverage)) {
 		lines.push(`| ${row.scope} | ${row.files} | ${row.sloc ?? ""} | ${cell(row.note ?? "")} |`);
-	}
-
-	lines.push(
-		"",
-		"## Score contributions",
-		"",
-		"Every point traces to raw metrics on this report (SPEC §7).",
-		"",
-		"| dimension | points | traceable metrics |",
-		"|---|---|---|",
-	);
-	for (const contribution of report.score.contributions) {
-		lines.push(
-			`| ${contribution.dimension} | ${contribution.points} | ${contribution.metricIds.join(", ")} |`,
-		);
 	}
 
 	lines.push("", "## Metrics", "", "| metric | value |", "|---|---|");
@@ -120,6 +105,22 @@ export function renderAuditMarkdown(
 	if (providerLines.length > 0) {
 		lines.push("", ...providerLines);
 	}
+
+	lines.push(
+		"",
+		"## Score contributions",
+		"",
+		"Every point traces to raw metrics on this report (SPEC §7).",
+		"",
+		"| dimension | points | traceable metrics |",
+		"|---|---|---|",
+	);
+	for (const contribution of report.score.contributions) {
+		lines.push(
+			`| ${contribution.dimension} | ${contribution.points} | ${contribution.metricIds.join(", ")} |`,
+		);
+	}
+	lines.push("", `**${scoreHeadline(report)}**`);
 
 	return lines.join("\n");
 }

@@ -94,7 +94,7 @@ describe("renderComparisonMarkdown", () => {
 	test("renders the bounded markdown summary with tables", async () => {
 		pair = await compareFixtures("clean", "sloppy");
 		const md = renderComparisonMarkdown(pair.comparison, pair.baseline, pair.current);
-		expect(md).toContain("# trellis compare —");
+		expect(md).toContain("# unslop compare —");
 		expect(md).toContain("## Index");
 		expect(md).toContain("| baseline | current | delta |");
 		expect(md).toContain("Lower is better · scoring");

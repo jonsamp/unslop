@@ -85,7 +85,7 @@ describe("trellis audit (deterministic core)", () => {
 			UNSLOP_DB: dbPath,
 		});
 		expect(code).toBe(0);
-		expect(stdout).toContain("# trellis audit");
+		expect(stdout).toContain("# unslop audit");
 		expect(stdout).toContain("lower is better");
 	}, 20_000);
 

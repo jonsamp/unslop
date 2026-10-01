@@ -228,7 +228,9 @@ describe("renderAuditMarkdown with a complete provider analysis", () => {
 			}
 			// The advisory metrics live only in the provider section.
 			expect(output).toContain("provider.jscpd.duplication.clone-pairs = 1");
-			expect(output.indexOf("## Provider analyses")).toBeGreaterThan(
+			// The score block closes the report, so advisory provider evidence
+			// precedes it rather than following it.
+			expect(output.indexOf("## Provider analyses")).toBeLessThan(
 				output.indexOf("## Score contributions"),
 			);
 		},

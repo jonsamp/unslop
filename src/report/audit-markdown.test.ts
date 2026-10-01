@@ -26,7 +26,7 @@ describe("renderAuditMarkdown across the render fixtures", () => {
 	test("renders clean, sloppy, mixed-language, incomplete and function-free repositories", () => {
 		for (const kind of FIXTURE_KINDS) {
 			const output = render(kind);
-			expect(output).toContain(`# trellis audit — fixture-${kind}`);
+			expect(output).toContain(`# unslop audit — fixture-${kind}`);
 			expect(output).toContain("## Source coverage");
 			expect(output).toContain("## Score contributions");
 			expect(output).toContain("## Metrics");

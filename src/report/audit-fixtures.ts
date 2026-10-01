@@ -152,7 +152,7 @@ export async function seedFixtureRepo(root: string, kind: FixtureKind): Promise<
  * (pinned timestamp; the caller must {@link FixtureReport.cleanup}).
  */
 export async function auditFixture(kind: FixtureKind): Promise<FixtureReport> {
-	const root = await mkdtemp(join(tmpdir(), `trellis-fixture-${kind}-`));
+	const root = await mkdtemp(join(tmpdir(), `unslop-fixture-${kind}-`));
 	try {
 		await seedFixtureRepo(root, kind);
 		const report = await auditWorkspace(root, { now: FIXTURE_NOW });
