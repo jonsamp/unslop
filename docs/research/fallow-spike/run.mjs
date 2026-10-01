@@ -260,7 +260,7 @@ try {
 		[2, 3, 1, 2],
 	);
 	assert.equal(
-		results.duplication.find((row) => row.name === "repeated-40").trellis.exhaustion.kind,
+		results.duplication.find((row) => row.name === "repeated-40").unslop.exhaustion.kind,
 		"match-work",
 	);
 	assert.equal(

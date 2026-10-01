@@ -54,7 +54,7 @@ function previousIdentity(report: AuditReport) {
 		if (analysis.provider.kind !== "native") continue;
 		analysis.provider.toolVersion = "0.2.2";
 		analysis.provider.adapterVersion = "0.2.2";
-		if (analysis.provider.id !== "trellis.duplication") continue;
+		if (analysis.provider.id !== "unslop.duplication") continue;
 		analysis.provider.options = {};
 		if (analysis.analysis !== undefined)
 			analysis.analysis.options = { "max-tokens": 2_000_000, "max-match-work": 100_000_000 };

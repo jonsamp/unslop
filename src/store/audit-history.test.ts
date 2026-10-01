@@ -202,7 +202,7 @@ describe("audit history provenance and compatible series", () => {
 			evidenceReport(
 				[
 					nativeComplexityAnalysis(),
-					nativeComplexityAnalysis({ id: "trellis.erosion", metricIds: ["erosion.todo-count"] }),
+					nativeComplexityAnalysis({ id: "unslop.erosion", metricIds: ["erosion.todo-count"] }),
 				],
 				{ index: 40 },
 			),

@@ -318,7 +318,7 @@ describe("evidence-requirement exit contract through the audit service", () => {
 
 	test("an invalid requirement configuration is an operational error (exit 1)", async () => {
 		const configPath = join(configDir, "trellis.yaml");
-		await writeFile(configPath, "policy:\n  requireEvidence:\n    - trellis.duplication\n");
+		await writeFile(configPath, "policy:\n  requireEvidence:\n    - unslop.duplication\n");
 		await expect(runWorkspaceAudit(root, { configPath })).rejects.toThrow(
 			/policy\.requireEvidence/,
 		);

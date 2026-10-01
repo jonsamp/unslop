@@ -47,7 +47,7 @@ describe("assessScoredBasis advisory-only changes", () => {
 		const current = evidenceReport([
 			nativeComplexityAnalysis(),
 			nativeComplexityAnalysis({
-				id: "trellis.wrappers",
+				id: "unslop.wrappers",
 				metricIds: ["wrapper.forwarding"],
 				scoring: "advisory",
 			}),
@@ -68,7 +68,7 @@ describe("assessScoredBasis scored measurement changes", () => {
 	test("a scored analysis recording different measurement semantics fails closed per measurement", () => {
 		const baseline = evidenceReport([nativeComplexityAnalysis()]);
 		const current = evidenceReport([
-			nativeComplexityAnalysis({ parser: { engine: "trellis.typescript", version: "6.0.0" } }),
+			nativeComplexityAnalysis({ parser: { engine: "unslop.typescript", version: "6.0.0" } }),
 		]);
 		const basis = assessScoredBasis(baseline, current);
 		expect(basis.comparable).toBe(false);
@@ -79,7 +79,7 @@ describe("assessScoredBasis scored measurement changes", () => {
 		expect(comparison.metrics).toBeUndefined();
 		expect(comparison.findings).toBeUndefined();
 		// The evidence dimension carries the explicit parser reason.
-		const native = comparison.evidence.providers.find((p) => p.providerId === "trellis.complexity");
+		const native = comparison.evidence.providers.find((p) => p.providerId === "unslop.complexity");
 		expect(native?.status).toBe("noncomparable");
 		expect(native?.reasons.map((reason) => reason.code)).toEqual(["parser-identity"]);
 	});
@@ -198,7 +198,7 @@ describe("assessScoredBasis versioned artifact pairs", () => {
 		expect(comparison.compatibility.comparable).toBe(true);
 		expect(
 			comparison.evidence.providers.map((provider) => `${provider.providerId}:${provider.status}`),
-		).toEqual(["jscpd:comparable", "trellis.complexity:comparable"]);
+		).toEqual(["jscpd:comparable", "unslop.complexity:comparable"]);
 		const jscpd = comparison.evidence.providers.find((p) => p.providerId === "jscpd");
 		expect(jscpd?.metrics?.find((delta) => delta.id === "provider.jscpd.pairs")?.delta).toBe(2);
 		expect(JSON.stringify(comparison)).toBe(JSON.stringify(compareReports(baseline, current)));

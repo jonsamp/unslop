@@ -160,10 +160,10 @@ export function measureAnalyses(
 			total: execution.length,
 		});
 		switch (analyzer.identity.id) {
-			case "trellis.complexity":
+			case "unslop.complexity":
 				runs.push(runComplexityAnalysis(syntax));
 				break;
-			case "trellis.duplication":
+			case "unslop.duplication":
 				runs.push(
 					runDuplicationAnalysis(
 						syntax,
@@ -171,15 +171,15 @@ export function measureAnalyses(
 					),
 				);
 				break;
-			case "trellis.dependency-graph":
+			case "unslop.dependency-graph":
 				graphRun = runDependencyGraphAnalysis(source, syntax);
 				runs.push(graphRun);
 				break;
-			case "trellis.import-cycles": {
+			case "unslop.import-cycles": {
 				if (graphRun === undefined) {
 					throw new Error(
-						'analyzer "trellis.import-cycles" executed before its prerequisite ' +
-							'"trellis.dependency-graph" produced a graph',
+						'analyzer "unslop.import-cycles" executed before its prerequisite ' +
+							'"unslop.dependency-graph" produced a graph',
 					);
 				}
 				runs.push(runImportCycleAnalysis(graphRun));

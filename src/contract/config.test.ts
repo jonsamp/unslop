@@ -106,7 +106,7 @@ describe("auditConfigSchema", () => {
 	});
 
 	test("rejects native analyzer ids and evidence ids as requirements, actionably", () => {
-		for (const id of ["trellis.complexity", "trellis.duplication", "provider.jscpd.pairs"]) {
+		for (const id of ["unslop.complexity", "unslop.duplication", "provider.jscpd.pairs"]) {
 			const parsed = auditConfigSchema.safeParse({ policy: { requireEvidence: [id] } });
 			expect(parsed.success).toBe(false);
 			if (!parsed.success) {

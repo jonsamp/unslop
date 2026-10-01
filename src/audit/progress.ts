@@ -23,6 +23,8 @@
  * sink wired produces a byte-identical measurement payload (SPEC §3.5).
  */
 
+import { NATIVE_NAMESPACE } from "../contract/index.ts";
+
 /** The ordered pipeline stages {@link import("./audit.ts").auditWorkspace} walks. */
 export type AuditPhase =
 	| "configure"
@@ -48,12 +50,12 @@ export const ANALYZER_IDS = [
 
 export type AnalyzerId = (typeof ANALYZER_IDS)[number];
 
-/** The `trellis.` namespace every native registry analyzer id carries. */
-const NATIVE_ID_NAMESPACE = "trellis.";
+/** The namespace every native registry analyzer id carries, from its one source. */
+const NATIVE_ID_NAMESPACE = `${NATIVE_NAMESPACE}.`;
 
 /**
  * The progress id of a native registry analyzer id (its id without the
- * `trellis.` namespace). Throws deterministically when the registry's
+ * namespace). Throws deterministically when the registry's
  * measured selection gains an analyzer this progress surface does not
  * mirror — the event contract stays explicit instead of silently widening.
  */

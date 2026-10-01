@@ -64,7 +64,7 @@ describe("compareEvidence identical basis", () => {
 		expect(jscpd.caveats.map((caveat) => caveat.code)).toEqual(["input-revision-changed"]);
 		expect(jscpd.metrics?.find((delta) => delta.id === "provider.jscpd.pairs")?.delta).toBe(4);
 		// Native content changes are the comparison's subject matter, not a per-entry caveat.
-		expect(provider(evidence, "trellis.complexity").caveats).toEqual([]);
+		expect(provider(evidence, "unslop.complexity").caveats).toEqual([]);
 	});
 });
 
@@ -184,7 +184,7 @@ describe("compareEvidence native entries and determinism", () => {
 			evidenceReport([nativeComplexityAnalysis()]),
 			evidenceReport([nativeComplexityAnalysis()]),
 		);
-		const native = provider(evidence, "trellis.complexity");
+		const native = provider(evidence, "unslop.complexity");
 		expect(native.status).toBe("comparable");
 		expect(native.reasons).toEqual([]);
 		// Native values live in the report's metrics/findings areas — never diffed per entry.
@@ -196,7 +196,7 @@ describe("compareEvidence native entries and determinism", () => {
 		const current = evidenceReport([nativeComplexityAnalysis({ paths: ["src/a.ts", "src/c.ts"] })]);
 		const native = provider(
 			compareEvidence(evidenceReport([nativeComplexityAnalysis()]), current),
-			"trellis.complexity",
+			"unslop.complexity",
 		);
 		expect(native.status).toBe("noncomparable");
 		expect(native.reasons.map((reason) => reason.code)).toEqual(["selection"]);
@@ -213,7 +213,7 @@ describe("compareEvidence native entries and determinism", () => {
 		expect(JSON.stringify(second)).toBe(JSON.stringify(first));
 		expect(first.providers.map((provider) => provider.providerId)).toEqual([
 			"jscpd",
-			"trellis.complexity",
+			"unslop.complexity",
 		]);
 	});
 });

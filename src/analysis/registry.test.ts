@@ -31,89 +31,89 @@ const entry = (
 
 describe("buildNativeRegistry", () => {
 	test("registers analyzers addressable by id in sorted order", () => {
-		const registry = buildNativeRegistry([entry("trellis.b"), entry("trellis.a")]);
+		const registry = buildNativeRegistry([entry("unslop.b"), entry("unslop.a")]);
 		expect(registry.analyzers.map((analyzer) => analyzer.identity.id)).toEqual([
-			"trellis.a",
-			"trellis.b",
+			"unslop.a",
+			"unslop.b",
 		]);
-		expect(registry.has("trellis.a")).toBe(true);
-		expect(registry.get("trellis.a")?.identity.id).toBe("trellis.a");
-		expect(registry.has("trellis.ghost")).toBe(false);
-		expect(registry.get("trellis.ghost")).toBeUndefined();
+		expect(registry.has("unslop.a")).toBe(true);
+		expect(registry.get("unslop.a")?.identity.id).toBe("unslop.a");
+		expect(registry.has("unslop.ghost")).toBe(false);
+		expect(registry.get("unslop.ghost")).toBeUndefined();
 	});
 
 	test("orders prerequisites first with id-ascending ties", () => {
 		const registry = buildNativeRegistry([
-			entry("trellis.cycles", { requires: ["trellis.graph"] }),
-			entry("trellis.alpha"),
-			entry("trellis.graph", { capabilities: ["graph"], requires: ["trellis.alpha"] }),
+			entry("unslop.cycles", { requires: ["unslop.graph"] }),
+			entry("unslop.alpha"),
+			entry("unslop.graph", { capabilities: ["graph"], requires: ["unslop.alpha"] }),
 		]);
 		expect(registry.ordered().map((analyzer) => analyzer.identity.id)).toEqual([
-			"trellis.alpha",
-			"trellis.graph",
-			"trellis.cycles",
+			"unslop.alpha",
+			"unslop.graph",
+			"unslop.cycles",
 		]);
 	});
 
 	test("rejects a duplicate analyzer id deterministically", () => {
-		expect(() => buildNativeRegistry([entry("trellis.a"), entry("trellis.a")])).toThrow(
-			'analyzer "trellis.a" is registered more than once',
+		expect(() => buildNativeRegistry([entry("unslop.a"), entry("unslop.a")])).toThrow(
+			'analyzer "unslop.a" is registered more than once',
 		);
 	});
 
 	test("rejects a capability owned by two analyzers deterministically", () => {
 		expect(() =>
 			buildNativeRegistry([
-				entry("trellis.a", { capabilities: ["shared"] }),
-				entry("trellis.b", { capabilities: ["shared"] }),
+				entry("unslop.a", { capabilities: ["shared"] }),
+				entry("unslop.b", { capabilities: ["shared"] }),
 			]),
-		).toThrow('capability "shared" is declared by both "trellis.a" and "trellis.b"');
+		).toThrow('capability "shared" is declared by both "unslop.a" and "unslop.b"');
 	});
 
 	test("rejects a metric id owned by two analyzers deterministically", () => {
 		expect(() =>
 			buildNativeRegistry([
-				entry("trellis.a", { metrics: ["metric.one"] }),
-				entry("trellis.b", { metrics: ["metric.one"] }),
+				entry("unslop.a", { metrics: ["metric.one"] }),
+				entry("unslop.b", { metrics: ["metric.one"] }),
 			]),
-		).toThrow('metric "metric.one" is declared by both "trellis.a" and "trellis.b"');
+		).toThrow('metric "metric.one" is declared by both "unslop.a" and "unslop.b"');
 	});
 
 	test("rejects a prerequisite that names no registered analyzer", () => {
-		expect(() =>
-			buildNativeRegistry([entry("trellis.a", { requires: ["trellis.ghost"] })]),
-		).toThrow('analyzer "trellis.a" requires unregistered analyzer "trellis.ghost"');
+		expect(() => buildNativeRegistry([entry("unslop.a", { requires: ["unslop.ghost"] })])).toThrow(
+			'analyzer "unslop.a" requires unregistered analyzer "unslop.ghost"',
+		);
 	});
 
 	test("rejects a direct dependency cycle with a canonical path", () => {
 		expect(() =>
 			buildNativeRegistry([
-				entry("trellis.b", { requires: ["trellis.a"] }),
-				entry("trellis.a", { requires: ["trellis.b"] }),
+				entry("unslop.b", { requires: ["unslop.a"] }),
+				entry("unslop.a", { requires: ["unslop.b"] }),
 			]),
-		).toThrow('analyzer dependency cycle: "trellis.a" -> "trellis.b" -> "trellis.a"');
+		).toThrow('analyzer dependency cycle: "unslop.a" -> "unslop.b" -> "unslop.a"');
 	});
 
 	test("rejects a self-dependency as a one-step cycle", () => {
-		expect(() => buildNativeRegistry([entry("trellis.a", { requires: ["trellis.a"] })])).toThrow(
-			'analyzer dependency cycle: "trellis.a" -> "trellis.a"',
+		expect(() => buildNativeRegistry([entry("unslop.a", { requires: ["unslop.a"] })])).toThrow(
+			'analyzer dependency cycle: "unslop.a" -> "unslop.a"',
 		);
 	});
 
 	test("normalizes an entered-from-outside cycle to its smallest member", () => {
 		expect(() =>
 			buildNativeRegistry([
-				entry("trellis.x", { requires: ["trellis.z"] }),
-				entry("trellis.z", { requires: ["trellis.y"] }),
-				entry("trellis.y", { requires: ["trellis.z"] }),
+				entry("unslop.x", { requires: ["unslop.z"] }),
+				entry("unslop.z", { requires: ["unslop.y"] }),
+				entry("unslop.y", { requires: ["unslop.z"] }),
 			]),
-		).toThrow('analyzer dependency cycle: "trellis.y" -> "trellis.z" -> "trellis.y"');
+		).toThrow('analyzer dependency cycle: "unslop.y" -> "unslop.z" -> "unslop.y"');
 	});
 
 	test("rejects an identity that violates the native namespace contract", () => {
 		expect(() =>
 			buildNativeRegistry([
-				entry("trellis.ok"),
+				entry("unslop.ok"),
 				{
 					identity: { ...identity("foreign.tool"), kind: "native" },
 					capabilities: ["foreign"],
@@ -122,7 +122,7 @@ describe("buildNativeRegistry", () => {
 				},
 			]),
 		).toThrow(
-			"native analyzer identity \"foreign.tool\" is invalid: id: a native provider id must be under the 'trellis.' namespace",
+			"native analyzer identity \"foreign.tool\" is invalid: id: a native provider id must be under the 'unslop.' namespace",
 		);
 	});
 });
@@ -143,28 +143,28 @@ describe("scoringCatalogMetricIds", () => {
 describe("requiredForScoring", () => {
 	test("derives catalog owners plus transitive prerequisites, excluding metric-free analyzers", () => {
 		const registry = buildNativeRegistry([
-			entry("trellis.complexity", { metrics: ["erosion.eroded-count.production"] }),
-			entry("trellis.duplication", { metrics: ["duplication.groups.production"] }),
-			entry("trellis.dependency-graph", { metrics: ["graph.files"] }),
-			entry("trellis.import-cycles", {
+			entry("unslop.complexity", { metrics: ["erosion.eroded-count.production"] }),
+			entry("unslop.duplication", { metrics: ["duplication.groups.production"] }),
+			entry("unslop.dependency-graph", { metrics: ["graph.files"] }),
+			entry("unslop.import-cycles", {
 				metrics: ["import-cycle.groups"],
-				requires: ["trellis.dependency-graph"],
+				requires: ["unslop.dependency-graph"],
 			}),
-			entry("trellis.safeguards"),
+			entry("unslop.safeguards"),
 		]);
 		expect(requiredForScoring(registry)).toEqual([
-			"trellis.complexity",
-			"trellis.dependency-graph",
-			"trellis.duplication",
-			"trellis.import-cycles",
+			"unslop.complexity",
+			"unslop.dependency-graph",
+			"unslop.duplication",
+			"unslop.import-cycles",
 		]);
 	});
 
 	test("honors an explicit catalog", () => {
 		const registry = buildNativeRegistry([
-			entry("trellis.a", { metrics: ["metric.a"] }),
-			entry("trellis.b"),
+			entry("unslop.a", { metrics: ["metric.a"] }),
+			entry("unslop.b"),
 		]);
-		expect(requiredForScoring(registry, ["metric.a"])).toEqual(["trellis.a"]);
+		expect(requiredForScoring(registry, ["metric.a"])).toEqual(["unslop.a"]);
 	});
 });

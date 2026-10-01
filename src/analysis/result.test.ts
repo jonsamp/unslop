@@ -16,7 +16,7 @@ import {
 
 const nativeProvider = providerIdentitySchema.parse({
 	kind: "native",
-	id: "trellis.duplication",
+	id: "unslop.duplication",
 	toolVersion: "0.2.1",
 	adapterVersion: "0.2.1",
 	mode: "shared-parse",
@@ -28,7 +28,7 @@ const analysis: AnalysisIdentity = analysisIdentitySchema.parse({
 		sourceSets: ["production"],
 		files: [{ path: "src/a.ts", fingerprint: "a".repeat(64) }],
 	},
-	parser: { engine: "trellis.typescript", version: "6.0.3" },
+	parser: { engine: "unslop.typescript", version: "6.0.3" },
 	options: {},
 });
 

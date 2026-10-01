@@ -235,13 +235,13 @@ for (const dataset of result.datasets) {
 	if (expected[dataset.name])
 		assert.deepEqual(
 			[
-				dataset.trellis.groups,
+				dataset.unslop.groups,
 				...Object.values(dataset.providers).map((provider) => provider.clonePairs),
 			],
 			expected[dataset.name],
 			dataset.name,
 		);
-	assert.equal(dataset.trellis.repeatedEvidenceEqual, true, `${dataset.name}: core stability`);
+	assert.equal(dataset.unslop.repeatedEvidenceEqual, true, `${dataset.name}: core stability`);
 	for (const provider of Object.values(dataset.providers))
 		assert.equal(provider.repeatedEvidenceEqual, true, `${dataset.name}: provider stability`);
 }

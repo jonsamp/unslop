@@ -151,18 +151,18 @@ function entry(
 	};
 }
 
-/** The default scored native entry: `trellis.complexity` owning `complexity.average-cc` over one file. */
+/** The default scored native entry: `unslop.complexity` owning `complexity.average-cc` over one file. */
 export function nativeComplexityAnalysis(overrides: AnalysisOverrides = {}): ReportAnalysis {
 	return entry(
 		{
 			kind: "native",
-			id: overrides.id ?? "trellis.complexity",
+			id: overrides.id ?? "unslop.complexity",
 			toolVersion: overrides.toolVersion ?? ANALYZER_VERSION,
 			adapterVersion: ANALYZER_VERSION,
 			mode: "shared-parse",
 			options: overrides.providerOptions ?? {},
 		},
-		{ engine: "trellis.typescript", version: "5.9.3" },
+		{ engine: "unslop.typescript", version: "5.9.3" },
 		{},
 		["complexity.average-cc"],
 		"scored",

@@ -103,7 +103,7 @@ describe("parserIdentitySchema", () => {
 	test("round-trips an engine and version", () => {
 		expect(parserIdentitySchema.parse(parser)).toEqual(parser);
 		expect(
-			parserIdentitySchema.safeParse({ engine: "trellis.typescript", version: "6.0.3" }).success,
+			parserIdentitySchema.safeParse({ engine: "unslop.typescript", version: "6.0.3" }).success,
 		).toBe(true);
 	});
 

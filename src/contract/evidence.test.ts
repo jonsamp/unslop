@@ -159,8 +159,8 @@ describe("evidenceAreaSchema", () => {
 		const ordered: EvidenceArea = {
 			completeness: "complete",
 			analyses: [
-				{ ...nativeEntry(["a.one"]), provider: { ...nativeProvider, id: "trellis.alpha" } },
-				{ ...nativeEntry(["b.one"]), provider: { ...nativeProvider, id: "trellis.beta" } },
+				{ ...nativeEntry(["a.one"]), provider: { ...nativeProvider, id: "unslop.alpha" } },
+				{ ...nativeEntry(["b.one"]), provider: { ...nativeProvider, id: "unslop.beta" } },
 			],
 		};
 		expect(evidenceAreaSchema.safeParse(ordered).success).toBe(true);

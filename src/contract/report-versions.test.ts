@@ -79,7 +79,7 @@ function baseReport(): PreProviderAuditReport {
 function scoredNative(metricIds: readonly string[]): ReportAnalysis {
 	return {
 		...fixtureNativeAnalysis(metricIds),
-		provider: { ...fixtureNativeProvider, id: "trellis.duplication" },
+		provider: { ...fixtureNativeProvider, id: "unslop.duplication" },
 	};
 }
 
@@ -153,7 +153,7 @@ describe("auditReportSchema (version-aware, §16.6)", () => {
 		expect(carriedAnalyses(baseReport())).toEqual([]);
 		const report = parseEvidenceReport(evidenceReport());
 		expect(carriedAnalyses(report).map((analysis) => analysis.provider.id)).toEqual([
-			"trellis.duplication",
+			"unslop.duplication",
 		]);
 	});
 });

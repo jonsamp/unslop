@@ -90,7 +90,7 @@ export interface EvidenceSide {
 
 /** One provider's evidence comparison across the two reports. */
 export interface EvidenceProviderComparison {
-	/** The provider's stable id (`jscpd`, `trellis.duplication`, …). */
+	/** The provider's stable id (`jscpd`, `unslop.duplication`, …). */
 	providerId: string;
 	status: EvidenceProviderStatus;
 	baseline: EvidenceSide;

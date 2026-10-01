@@ -16,7 +16,7 @@ import {
 
 const nativeIdentity: ProviderIdentity = {
 	kind: "native",
-	id: "trellis.duplication",
+	id: "unslop.duplication",
 	toolVersion: "0.2.1",
 	adapterVersion: "0.2.1",
 	mode: "shared-parse",
@@ -70,7 +70,7 @@ describe("providerIdentitySchema", () => {
 	});
 
 	test("rejects an external provider id under the reserved trellis namespace", () => {
-		const result = providerIdentitySchema.safeParse({ ...externalIdentity, id: "trellis.jscpd" });
+		const result = providerIdentitySchema.safeParse({ ...externalIdentity, id: "unslop.jscpd" });
 		expect(result.success).toBe(false);
 	});
 
@@ -136,14 +136,14 @@ describe("namespacedEvidenceId", () => {
 		expect(isNamespacedEvidenceId("provider.knip.clone-pair", "jscpd")).toBe(false);
 		expect(isNamespacedEvidenceId("duplication.density", "jscpd")).toBe(false);
 		expect(EVIDENCE_NAMESPACE).toBe("provider");
-		expect(NATIVE_NAMESPACE).toBe("trellis");
+		expect(NATIVE_NAMESPACE).toBe("unslop");
 	});
 });
 
 describe("capabilityDeclarationsSchema", () => {
 	test("accepts a set of distinct capability declarations", () => {
 		const declarations: ProviderCapability[] = [
-			{ providerId: "trellis.duplication", capabilityId: "duplication.groups" },
+			{ providerId: "unslop.duplication", capabilityId: "duplication.groups" },
 			{ providerId: "jscpd", capabilityId: "duplication.pairs" },
 			{ providerId: "knip", capabilityId: "reachability.exports" },
 		];

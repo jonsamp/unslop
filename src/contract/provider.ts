@@ -15,7 +15,7 @@
  * may be recorded only on `executionMetadataSchema` (analysis.ts), which
  * never feeds `measurementIdentity`.
  *
- * Namespace rules (§16.5): native analyzers own the `trellis.` id prefix;
+ * Namespace rules (§16.5): native analyzers own the `unslop.` id prefix;
  * external evidence ids and finding kinds own the reserved `provider.`
  * prefix (see {@link namespacedEvidenceId}) so provider evidence can never
  * collide with native metrics or native finding kinds.
@@ -46,13 +46,13 @@ export const PRODUCER_KINDS = ["native", "external"] as const;
 export type ProducerKind = (typeof PRODUCER_KINDS)[number];
 export const producerKindSchema = z.enum(PRODUCER_KINDS);
 
-/** Id namespace owned by native trellis analyzers (`trellis.duplication`, …). */
-export const NATIVE_NAMESPACE = "trellis";
+/** Id namespace owned by native unslop analyzers (`unslop.duplication`, …). */
+export const NATIVE_NAMESPACE = "unslop";
 
 /** Reserved id namespace for external-provider evidence (metrics, finding kinds). */
 export const EVIDENCE_NAMESPACE = "provider";
 
-/** Stable provider id — a dotted identifier (`trellis.duplication`, `jscpd`, `knip`). */
+/** Stable provider id — a dotted identifier (`unslop.duplication`, `jscpd`, `knip`). */
 export const providerIdSchema = dottedIdSchema;
 
 /**
@@ -111,14 +111,14 @@ export const providerIdentitySchema = z
 		if (identity.kind === "native" && !isNativeId) {
 			ctx.addIssue({
 				code: "custom",
-				message: "a native provider id must be under the 'trellis.' namespace",
+				message: "a native provider id must be under the 'unslop.' namespace",
 				path: ["id"],
 			});
 		}
 		if (identity.kind === "external" && isNativeId) {
 			ctx.addIssue({
 				code: "custom",
-				message: "an external provider id must not use the reserved 'trellis.' namespace",
+				message: "an external provider id must not use the reserved 'unslop.' namespace",
 				path: ["id"],
 			});
 		}

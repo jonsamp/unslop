@@ -103,7 +103,7 @@ export const providerCapabilityStatusSchema = z
 		if (isNativeNamespace) {
 			ctx.addIssue({
 				code: "custom",
-				message: "external provider metadata must not use the reserved 'trellis.' namespace",
+				message: "external provider metadata must not use the reserved 'unslop.' namespace",
 				path: ["providerId"],
 			});
 		}

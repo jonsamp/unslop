@@ -83,10 +83,10 @@ describe("default configuration selects only native analyses", () => {
 		expect(measurementPayload(empty)).toEqual(measurementPayload(absent));
 		// No provider is carried: absence reads as unrequested (§6.6).
 		expect(carriedProviderIds(absent)).toEqual([
-			"trellis.complexity",
-			"trellis.dependency-graph",
-			"trellis.duplication",
-			"trellis.import-cycles",
+			"unslop.complexity",
+			"unslop.dependency-graph",
+			"unslop.duplication",
+			"unslop.import-cycles",
 		]);
 		expect(evidenceArea(absent).completeness).toBe("complete");
 	});
@@ -147,7 +147,7 @@ describe("an explicitly requested jscpd adds unscored advisory evidence", () => 
 				"provider.jscpd.duplication.clone-groups",
 				"provider.jscpd.duplication.clone-pairs",
 			]);
-			expect(carriedProviderIds(enriched)).toContain("trellis.duplication");
+			expect(carriedProviderIds(enriched)).toContain("unslop.duplication");
 			const pairs = entry.cloneEvidence?.filter((clone) => clone.kind === "pair") ?? [];
 			expect(pairs).toHaveLength(1);
 			expect(entry.findings?.map((finding) => finding.kind)).toEqual(["provider.jscpd.clone-pair"]);

@@ -11,8 +11,8 @@
  * process. ASTs and internal caches never serialize as evidence (AC2); use
  * `toContractResult` for the report-shaped minimum.
  *
- * The declared seam (AC2): `trellis.import-cycles` declares
- * `trellis.dependency-graph` as its prerequisite, and the cycle wrapper
+ * The declared seam (AC2): `unslop.import-cycles` declares
+ * `unslop.dependency-graph` as its prerequisite, and the cycle wrapper
  * consumes the graph wrapper's *run* — product, selection, and coverage — so
  * the dependency is typed, not re-derived.
  *
@@ -73,11 +73,11 @@ const DUPLICATION_NATIVE_OPTIONS = { engine: "suffix-array-lcp", "work-accountin
 
 /** Supported native analyzer ids, sorted (the registry's addressable surface). */
 export const NATIVE_ANALYZER_IDS = [
-	"trellis.complexity",
-	"trellis.dependency-graph",
-	"trellis.duplication",
-	"trellis.import-cycles",
-	"trellis.safeguards",
+	"unslop.complexity",
+	"unslop.dependency-graph",
+	"unslop.duplication",
+	"unslop.import-cycles",
+	"unslop.safeguards",
 ] as const;
 
 /** One native analyzer id. */
@@ -128,7 +128,7 @@ export function runComplexityAnalysis(
 	return {
 		product,
 		result: {
-			provider: nativeAnalyzerIdentity("trellis.complexity", "shared-parse"),
+			provider: nativeAnalyzerIdentity("unslop.complexity", "shared-parse"),
 			...scopeFields(scope),
 			analysis: nativeAnalysisIdentity(scope, syntax.compilerVersion),
 			metrics: product.metrics,
@@ -165,7 +165,7 @@ export function runDuplicationAnalysis(
 		product,
 		result: {
 			provider: nativeAnalyzerIdentity(
-				"trellis.duplication",
+				"unslop.duplication",
 				"shared-parse",
 				DUPLICATION_NATIVE_OPTIONS,
 			),
@@ -209,7 +209,7 @@ export function runDependencyGraphAnalysis(
 	return {
 		product,
 		result: {
-			provider: nativeAnalyzerIdentity("trellis.dependency-graph", "shared-parse"),
+			provider: nativeAnalyzerIdentity("unslop.dependency-graph", "shared-parse"),
 			...scopeFields(scope),
 			analysis: nativeAnalysisIdentity(scope, syntax.compilerVersion),
 			metrics: product.metrics,
@@ -235,7 +235,7 @@ export function runImportCycleAnalysis(
 	return {
 		product,
 		result: {
-			provider: nativeAnalyzerIdentity("trellis.import-cycles", "graph"),
+			provider: nativeAnalyzerIdentity("unslop.import-cycles", "graph"),
 			state: graph.result.state,
 			analysis: graph.result.analysis,
 			observedCoverage: graph.result.observedCoverage,
@@ -303,7 +303,7 @@ const CYCLE_METRICS = [
 ] as const;
 
 const complexityAnalyzer: NativeAnalyzerRegistration = {
-	identity: nativeAnalyzerIdentity("trellis.complexity", "shared-parse"),
+	identity: nativeAnalyzerIdentity("unslop.complexity", "shared-parse"),
 	capabilities: ["complexity"],
 	metrics: COMPLEXITY_METRICS,
 	requires: [],
@@ -311,7 +311,7 @@ const complexityAnalyzer: NativeAnalyzerRegistration = {
 
 const duplicationAnalyzer: NativeAnalyzerRegistration = {
 	identity: nativeAnalyzerIdentity(
-		"trellis.duplication",
+		"unslop.duplication",
 		"shared-parse",
 		DUPLICATION_NATIVE_OPTIONS,
 	),
@@ -321,21 +321,21 @@ const duplicationAnalyzer: NativeAnalyzerRegistration = {
 };
 
 const dependencyGraphAnalyzer: NativeAnalyzerRegistration = {
-	identity: nativeAnalyzerIdentity("trellis.dependency-graph", "shared-parse"),
+	identity: nativeAnalyzerIdentity("unslop.dependency-graph", "shared-parse"),
 	capabilities: ["dependency-graph"],
 	metrics: GRAPH_METRICS,
 	requires: [],
 };
 
 const importCyclesAnalyzer: NativeAnalyzerRegistration = {
-	identity: nativeAnalyzerIdentity("trellis.import-cycles", "graph"),
+	identity: nativeAnalyzerIdentity("unslop.import-cycles", "graph"),
 	capabilities: ["import-cycles"],
 	metrics: CYCLE_METRICS,
-	requires: ["trellis.dependency-graph"],
+	requires: ["unslop.dependency-graph"],
 };
 
 const safeguardsAnalyzer: NativeAnalyzerRegistration = {
-	identity: nativeAnalyzerIdentity("trellis.safeguards", "configuration-inspection"),
+	identity: nativeAnalyzerIdentity("unslop.safeguards", "configuration-inspection"),
 	capabilities: ["safeguards"],
 	metrics: [],
 	requires: [],

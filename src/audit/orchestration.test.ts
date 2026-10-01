@@ -161,30 +161,30 @@ describe("audit orchestration through the registry", () => {
 		const runs = measureAnalyses(source, syntax);
 		// Selection and order come from the registry, not a hardcoded list.
 		expect(selectedMeasuredAnalyzers().map((analyzer) => analyzer.identity.id)).toEqual([
-			"trellis.complexity",
-			"trellis.dependency-graph",
-			"trellis.duplication",
-			"trellis.import-cycles",
+			"unslop.complexity",
+			"unslop.dependency-graph",
+			"unslop.duplication",
+			"unslop.import-cycles",
 		]);
 		expect(runs.map((run) => run.result.provider.id)).toEqual([
-			"trellis.complexity",
-			"trellis.dependency-graph",
-			"trellis.duplication",
-			"trellis.import-cycles",
+			"unslop.complexity",
+			"unslop.dependency-graph",
+			"unslop.duplication",
+			"unslop.import-cycles",
 		]);
 		// Every selected run analyzed the same shared parse (the passes are the
 		// inputs; measurement cannot re-discover or re-parse).
 		for (const run of runs) {
 			expect(run.result.analysis?.parser).toEqual({
-				engine: "trellis.typescript",
+				engine: "unslop.typescript",
 				version: syntax.compilerVersion,
 			});
 		}
 		// The cycle analyzer consumed the exact graph run the registry ordered
 		// before it — the wrapper reference-copies the graph's identity, so a
 		// re-derived graph would be deep-equal but never the same object.
-		const graph = runs.find((run) => run.result.provider.id === "trellis.dependency-graph");
-		const cycles = runs.find((run) => run.result.provider.id === "trellis.import-cycles");
+		const graph = runs.find((run) => run.result.provider.id === "unslop.dependency-graph");
+		const cycles = runs.find((run) => run.result.provider.id === "unslop.import-cycles");
 		expect(cycles?.result.analysis).toBe(graph?.result.analysis);
 		expect(cycles?.result.observedCoverage).toBe(graph?.result.observedCoverage);
 		expect(cycles?.result.state).toBe(graph?.result.state);
@@ -315,7 +315,7 @@ describe("measuredAnalysisEvidence", () => {
 			...first,
 			result: {
 				...first.result,
-				provider: { ...first.result.provider, id: "trellis.unregistered" },
+				provider: { ...first.result.provider, id: "unslop.unregistered" },
 			},
 		};
 		expect(() => measuredAnalysisEvidence([unregistered])).toThrow(/not registered/);
@@ -324,10 +324,10 @@ describe("measuredAnalysisEvidence", () => {
 
 describe("analyzerProgressId", () => {
 	test("maps registry analyzer ids onto the progress surface and rejects unknown ids", () => {
-		expect(analyzerProgressId("trellis.complexity")).toBe("complexity");
-		expect(analyzerProgressId("trellis.dependency-graph")).toBe("dependency-graph");
-		expect(analyzerProgressId("trellis.duplication")).toBe("duplication");
-		expect(analyzerProgressId("trellis.import-cycles")).toBe("import-cycles");
-		expect(() => analyzerProgressId("trellis.brand-new")).toThrow(/no progress id/);
+		expect(analyzerProgressId("unslop.complexity")).toBe("complexity");
+		expect(analyzerProgressId("unslop.dependency-graph")).toBe("dependency-graph");
+		expect(analyzerProgressId("unslop.duplication")).toBe("duplication");
+		expect(analyzerProgressId("unslop.import-cycles")).toBe("import-cycles");
+		expect(() => analyzerProgressId("unslop.brand-new")).toThrow(/no progress id/);
 	});
 });

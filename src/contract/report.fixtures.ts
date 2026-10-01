@@ -17,7 +17,7 @@ import { ANALYZER_VERSION } from "./version.ts";
 /** The native analyzer identity the fixture entries carry. */
 export const fixtureNativeProvider: ProviderIdentity = {
 	kind: "native",
-	id: "trellis.complexity",
+	id: "unslop.complexity",
 	toolVersion: ANALYZER_VERSION,
 	adapterVersion: ANALYZER_VERSION,
 	mode: "shared-parse",
@@ -27,7 +27,7 @@ export const fixtureNativeProvider: ProviderIdentity = {
 /** A complete native analysis identity over an empty production selection. */
 export const fixtureNativeAnalysisIdentity: AnalysisIdentity = {
 	selection: { sourceSets: ["production"], files: [] },
-	parser: { engine: "trellis.typescript", version: "5.9.3" },
+	parser: { engine: "unslop.typescript", version: "5.9.3" },
 	options: {},
 };
 

@@ -4,7 +4,7 @@
  *
  * The registry makes trellis's existing native analyzers addressable through
  * **explicit supported ids and dependency declarations**: every registration
- * pairs a validated native provider identity (`trellis.complexity`, …, the
+ * pairs a validated native provider identity (`unslop.complexity`, …, the
  * §16.2 contract) with the capabilities it provides, the contract metric ids
  * it emits, and the prerequisite analyzer ids it consumes. `buildNativeRegistry`
  * validates the declaration set up front and rejects, with deterministic

@@ -89,30 +89,30 @@ describe("native registry", () => {
 		expect(NATIVE_REGISTRY.analyzers.map((analyzer) => analyzer.identity.id)).toEqual([
 			...NATIVE_ANALYZER_IDS,
 		]);
-		expect(NATIVE_REGISTRY.has("trellis.safeguards")).toBe(true);
+		expect(NATIVE_REGISTRY.has("unslop.safeguards")).toBe(true);
 	});
 
 	test("declares the graph-to-cycle prerequisite and orders it first", () => {
-		expect(NATIVE_REGISTRY.get("trellis.import-cycles")?.requires).toEqual([
-			"trellis.dependency-graph",
+		expect(NATIVE_REGISTRY.get("unslop.import-cycles")?.requires).toEqual([
+			"unslop.dependency-graph",
 		]);
 		expect(NATIVE_REGISTRY.ordered().map((analyzer) => analyzer.identity.id)).toEqual([
-			"trellis.complexity",
-			"trellis.dependency-graph",
-			"trellis.duplication",
-			"trellis.import-cycles",
-			"trellis.safeguards",
+			"unslop.complexity",
+			"unslop.dependency-graph",
+			"unslop.duplication",
+			"unslop.import-cycles",
+			"unslop.safeguards",
 		]);
 	});
 
 	test("derives the scoring catalog's required analyses without the safeguard inspection", () => {
 		expect(nativeScoringRequiredIds()).toEqual([
-			"trellis.complexity",
-			"trellis.dependency-graph",
-			"trellis.duplication",
-			"trellis.import-cycles",
+			"unslop.complexity",
+			"unslop.dependency-graph",
+			"unslop.duplication",
+			"unslop.import-cycles",
 		]);
-		expect(NATIVE_REGISTRY.get("trellis.safeguards")?.metrics).toEqual([]);
+		expect(NATIVE_REGISTRY.get("unslop.safeguards")?.metrics).toEqual([]);
 	});
 });
 
@@ -132,7 +132,7 @@ describe("runComplexityAnalysis", () => {
 		await put("package.json", JSON.stringify({ name: "app" }));
 		await put("src/a.ts", CLONE_FN);
 		const { syntax } = await passes();
-		expect(declaredMetrics("trellis.complexity")).toEqual(
+		expect(declaredMetrics("unslop.complexity")).toEqual(
 			metricIds(runComplexityAnalysis(syntax).product.metrics),
 		);
 	});
@@ -209,7 +209,7 @@ describe("runDuplicationAnalysis", () => {
 		await put("package.json", JSON.stringify({ name: "app" }));
 		await put("src/a.ts", CLONE_FN);
 		const { syntax } = await passes();
-		expect(declaredMetrics("trellis.duplication")).toEqual(
+		expect(declaredMetrics("unslop.duplication")).toEqual(
 			metricIds(runDuplicationAnalysis(syntax).product.metrics),
 		);
 	});
@@ -245,7 +245,7 @@ describe("runDependencyGraphAnalysis", () => {
 		await put("package.json", JSON.stringify({ name: "app" }));
 		await put("src/a.ts", CLONE_FN);
 		const { source, syntax } = await passes();
-		expect(declaredMetrics("trellis.dependency-graph")).toEqual(
+		expect(declaredMetrics("unslop.dependency-graph")).toEqual(
 			metricIds(runDependencyGraphAnalysis(source, syntax).product.metrics),
 		);
 	});
@@ -284,7 +284,7 @@ describe("runImportCycleAnalysis", () => {
 		await put("src/b.ts", `${CLONE_FN}import { alpha } from "./a.ts";\n`);
 		const { source, syntax } = await passes();
 		const graph = runDependencyGraphAnalysis(source, syntax);
-		expect(declaredMetrics("trellis.import-cycles")).toEqual(
+		expect(declaredMetrics("unslop.import-cycles")).toEqual(
 			metricIds(runImportCycleAnalysis(graph).product.metrics),
 		);
 	});

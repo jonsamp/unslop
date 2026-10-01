@@ -85,7 +85,7 @@ describe("assembleReport evidence area", () => {
 				{ path: "src/b.ts", fingerprint: "b".repeat(64) },
 			],
 		},
-		parser: { engine: "trellis.typescript", version: "5.9.3" },
+		parser: { engine: "unslop.typescript", version: "5.9.3" },
 		options: {},
 	};
 
@@ -100,11 +100,7 @@ describe("assembleReport evidence area", () => {
 			metricIds?: readonly string[];
 		} = {},
 	) {
-		const {
-			providerId = "trellis.duplication",
-			scoring = "scored",
-			state = "complete",
-		} = overrides;
+		const { providerId = "unslop.duplication", scoring = "scored", state = "complete" } = overrides;
 		return {
 			metrics,
 			findings: overrides.findings ?? [],
@@ -145,8 +141,8 @@ describe("assembleReport evidence area", () => {
 	test("carries per-analysis provenance, roles and ownership, ordered by provider id", () => {
 		const metrics = requiredMetrics();
 		const inputs = [
-			contribution(metrics.slice(0, 3), { providerId: "trellis.duplication" }),
-			contribution(metrics.slice(3), { providerId: "trellis.complexity" }),
+			contribution(metrics.slice(0, 3), { providerId: "unslop.duplication" }),
+			contribution(metrics.slice(3), { providerId: "unslop.complexity" }),
 		];
 		const report = assembleReport(
 			{ ...fakeMeasurements(), analyses: inputs },
@@ -156,8 +152,8 @@ describe("assembleReport evidence area", () => {
 			throw new Error("expected an evidence-carrying report");
 		}
 		expect(report.evidence.analyses.map((analysis) => analysis.provider.id)).toEqual([
-			"trellis.complexity",
-			"trellis.duplication",
+			"unslop.complexity",
+			"unslop.duplication",
 		]);
 		for (const analysis of report.evidence.analyses) {
 			expect(analysis.scoring).toBe("scored");
@@ -175,9 +171,9 @@ describe("assembleReport evidence area", () => {
 	});
 
 	test("an incomplete advisory analysis degrades the evidence without flipping the score (AC1)", () => {
-		const scored = contribution(requiredMetrics(), { providerId: "trellis.duplication" });
+		const scored = contribution(requiredMetrics(), { providerId: "unslop.duplication" });
 		const advisory = contribution([metric("complexity.cc.p50.test", 3)], {
-			providerId: "trellis.complexity",
+			providerId: "unslop.complexity",
 			scoring: "advisory",
 			state: "incomplete",
 		});
@@ -201,7 +197,7 @@ describe("assembleReport evidence area", () => {
 				state: "incomplete" as const,
 				reason: "1 selected file produced parse diagnostics",
 			})),
-			{ providerId: "trellis.duplication", state: "incomplete" },
+			{ providerId: "unslop.duplication", state: "incomplete" },
 		);
 		const metrics = scored.metrics;
 		// The scorer flags the incomplete metrics partial; the declared scored
@@ -222,7 +218,7 @@ describe("assembleReport evidence area", () => {
 		// scorer that saw only complete metrics says otherwise — assembly
 		// must reject the mismatch rather than publish either lie.
 		const scored = contribution(requiredMetrics(), {
-			providerId: "trellis.duplication",
+			providerId: "unslop.duplication",
 			state: "incomplete",
 		});
 		expect(() =>

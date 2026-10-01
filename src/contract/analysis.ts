@@ -85,7 +85,7 @@ export type SourceSelection = z.infer<typeof sourceSelectionSchema>;
 
 /**
  * Parser identity (§16.2): the engine that read the inputs. Native analyses
- * record the pinned shared parse (`trellis.typescript` at the pinned
+ * record the pinned shared parse (`unslop.typescript` at the pinned
  * compiler version); a provider whose engine differs records its own
  * (e.g. `jscpd.tokenizer`), so two analyses never compare equal across
  * different parsers.

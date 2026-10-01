@@ -25,7 +25,7 @@ export const externalProvider: ProviderIdentity = {
 
 export const nativeProvider: ProviderIdentity = {
 	kind: "native",
-	id: "trellis.duplication",
+	id: "unslop.duplication",
 	toolVersion: "0.2.1",
 	adapterVersion: "0.2.1",
 	mode: "shared-parse",

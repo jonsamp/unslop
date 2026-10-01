@@ -43,7 +43,7 @@ export const MEASURED_SOURCE_SETS = ["production", "test"] as const;
 export const ALL_SOURCE_SETS: readonly SourceSet[] = SOURCE_SETS;
 
 /** The shared-parse engine identity every native analysis records (§16.2). */
-const SHARED_PARSE_ENGINE = "trellis.typescript";
+const SHARED_PARSE_ENGINE = "unslop.typescript";
 
 /**
  * The native provider identity of one analyzer: kind `native`, the trellis

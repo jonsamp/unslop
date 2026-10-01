@@ -84,7 +84,7 @@ function baseReport(): PreProviderAuditReport {
 function scoredNative(metricIds: readonly string[]): ReportAnalysis {
 	return {
 		...fixtureNativeAnalysis(metricIds),
-		provider: { ...fixtureNativeProvider, id: "trellis.duplication" },
+		provider: { ...fixtureNativeProvider, id: "unslop.duplication" },
 	};
 }
 
@@ -102,7 +102,7 @@ function incompleteScoredNative(metricIds: readonly string[]): ReportAnalysis {
 					{ path: "src/b.ts", fingerprint: "b".repeat(64) },
 				],
 			},
-			parser: { engine: "trellis.typescript", version: "5.9.3" },
+			parser: { engine: "unslop.typescript", version: "5.9.3" },
 			options: {},
 		},
 		observedCoverage: partialCoverage,
@@ -311,7 +311,7 @@ describe("auditReportSchema completeness split (§16.2)", () => {
 					scoredNative(["duplication.density"]),
 					{
 						...scoredNative(["duplication.density"]),
-						provider: { ...fixtureNativeProvider, id: "trellis.other" },
+						provider: { ...fixtureNativeProvider, id: "unslop.other" },
 					},
 				],
 			},

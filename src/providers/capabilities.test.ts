@@ -124,7 +124,7 @@ describe("supported provider capability metadata", () => {
 			providerCapabilityStatusSchema.parse(
 				entry({ providerId: `${NATIVE_NAMESPACE}.duplication` }),
 			),
-		).toThrow(/reserved 'trellis\.' namespace/);
+		).toThrow(/reserved 'unslop\.' namespace/);
 	});
 
 	test("couples the deferred status to a recorded decision", () => {
